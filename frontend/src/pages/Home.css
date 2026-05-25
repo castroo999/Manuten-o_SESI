@@ -1,0 +1,54 @@
+
+.conteudo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  font-family: "Poppins", sans-serif;
+}
+
+.logo {
+  width: 1000px;
+  height: 500px
+}
+
+.conteudo h2 {
+  color: black;
+  font-size: 40px;
+  text-align: center;
+}
+
+.botao {
+  display: flex;
+  gap: 120px;
+  margin-top: 20px;
+}
+
+.coluna {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.coluna p {
+  font-size: 24px;
+}
+
+.coluna button {
+  width: 180px;
+  height: 50px;
+  border: none;
+  border-radius: 30px;
+  background: #f2ab00;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.coluna button:hover {
+  transform: scale(1.05);
+}

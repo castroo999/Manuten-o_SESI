@@ -1,0 +1,31 @@
+
+POST http://localhost:3000/orcamentos
+Content-Type: application/json
+
+{
+  "title": "Portão novo",
+  "description": "joao quer potao ",
+  "cliente": "igris",
+  "tel": "33311111"
+}
+
+###
+
+GET http://localhost:3000/orcamentos
+
+
+###
+
+PUT http://localhost:3000/orcamentos/
+Content-Type: application/json
+
+{
+  "title": "Atualizado",
+  "description": "Novo texto",
+  "cliente": "Fernando",
+   "tel": "222222222"
+}
+
+###
+
+DELETE http://localhost:3000/orcamentos/c90bfb52-be18-4bd1-898f-9cf7406e0a27

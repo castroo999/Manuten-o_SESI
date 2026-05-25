@@ -1,0 +1,24 @@
+
+.cadastrar {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    color: white;
+
+    & a {
+        text-decoration: none;
+        color: #fbbf24;
+    }
+
+}
+
+h2 {
+    font-family: 'Poppins', sans-serif;
+}
+
+.sucesso h3 {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}

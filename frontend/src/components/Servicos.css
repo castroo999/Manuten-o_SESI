@@ -1,0 +1,49 @@
+.tudo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.tudo h2 {
+    text-align: center;
+    font-family: 'poppins', sans-serif;
+    margin-bottom: 40px;
+}
+
+.tudo button {
+    height: 50px;
+    width: 300px;
+    text-decoration: none;
+    border: none;
+    display: block;
+    margin: 10px auto;
+    background-color: #ff0000;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.tudo a{
+    text-decoration: none;
+}
+
+.cards2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    gap: 30px;
+}
+
+.card2 {
+    background-color: aqua;
+    height: 330px;
+    width: 300px;
+    border-radius: 10px;
+}
+
+.card2 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

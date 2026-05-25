@@ -1,0 +1,19 @@
+.tudo {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.tudo h2 {
+  font-family: 'poppins', sans-serif;
+  margin-bottom: 40px;
+}
+
+.card img {
+  width: 667px;
+  height: 454px;
+}
