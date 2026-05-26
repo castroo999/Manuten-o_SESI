@@ -1,90 +1,69 @@
-#  Inove Serralheria
+# 🌱 Plantamatica - Sistema de Gestão de Manutenção Escolar
 
-Sistema web de gestão de orçamentos para uma serralheria, desenvolvido com foco em prática de autenticação, CRUD e controle de permissões.
+O Plantamatica é um sistema web desenvolvido para auxiliar na gestão de manutenção escolar do SESI 428.
 
----
+A plataforma permite que alunos, funcionários e colaboradores registrem chamados de manutenção, informando:
 
-##  Sobre o projeto
+- Problema encontrado
+- Local do problema
+- Descrição
+- Prioridade
+- Status do chamado
 
-O **Inove Serralheria** é uma aplicação full stack onde clientes podem criar orçamentos e administradores podem gerenciar todos os pedidos.
-
-O sistema conta com autenticação de usuários, controle de permissões (admin/user) e integração entre frontend e backend.
-
----
-
-##  Funcionalidades
-
-###  Usuário comum:
-- Criar orçamentos
-- Visualizar apenas seus próprios orçamentos
-- Login e cadastro
-
-###  Administrador:
-- Visualizar todos os orçamentos
-- Editar orçamentos
-- Excluir orçamentos
-- Controle de permissões (role)
+O objetivo do projeto é facilitar a comunicação entre a comunidade escolar e o responsável pela manutenção da escola.
 
 ---
 
-##  Tecnologias utilizadas
+# 🚀 Tecnologias utilizadas
 
-### Frontend:
-- React
+## Frontend
+- React.js
 - React Router DOM
 - Axios
-- CSS
+- CSS3
+- Lucide React
 
-### Backend:
+## Backend
 - Node.js
 - Fastify
 - SQLite
-- JWT (autenticação)
-- Bcrypt (criptografia de senha)
+- JWT
+- Bcrypt
 
 ---
 
-##  Autenticação
+# 📸 Funcionalidades
 
-O sistema utiliza **JWT (JSON Web Token)** para autenticação.
-
-- Senhas criptografadas com bcrypt
-- Rotas protegidas com middleware
-- Controle de acesso por role (admin/user)
-
----
-
-##  Banco de dados
-
-O projeto utiliza SQLite com duas tabelas principais:
-
-- `user` → usuários do sistema
-- `orcamentos` → orçamentos criados pelos clientes
+✅ Cadastro de usuários  
+✅ Login com autenticação JWT  
+✅ Sistema de permissões (admin e usuário)  
+✅ Criação de chamados  
+✅ Dashboard de chamados  
+✅ Edição de chamados  
+✅ Exclusão de chamados  
+✅ Filtro de chamados  
+✅ Integração com WhatsApp  
+✅ Sistema de prioridade  
+✅ Interface moderna e responsiva  
 
 ---
 
-## Aprendizados
+# 👨‍💻 Equipe
 
-Esse projeto foi desenvolvido com foco em prática de:
+## Gustavo Castro
+Desenvolvedor Full Stack
 
-- Consumo de API
-- Criação de CRUD completo
-- Autenticação e autorização
-- Controle de permissões
-- Integração frontend + backend
+## Gabriel Rodrigues
+PO do projeto
 
----
-
-## Status do projeto
-
-✔ Em desenvolvimento  
-✔ Funcional  
-⚠ Ainda sem deploy
-
+## Matheus Rozante
+Designer Figma
 
 ---
 
-##  Autor
+# ⚙️ Como rodar o projeto
 
-Desenvolvido por Gustavo Castro  
-Estudante de Análise e Desenvolvimento de Sistemas – SENAI
+## Clone o repositório
+
+```bash
+git clone https://github.com/castroo999/Manuten-o_SESI.git
