@@ -1,144 +1,130 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 .top-header {
-    width: 100%;
-    background: #c4002f;
-    position: relative;
-    font-family: 'Poppins', sans-serif;
-    overflow: hidden;
+  width: 100%;
+  background: #b6002b;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(27, 27, 27, 0.12);
 }
 
 .top-bar {
-    width: 100%;
-    height: 75px;
+  width: min(1180px, calc(100% - 32px));
+  min-height: 82px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 30px;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+.brand-kicker {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #ffd166;
 }
 
 .top-bar h1 {
-    color: white;
-
-    font-size: 42px;
-
-    font-family: 'Bebas Neue', sans-serif;
-
-    letter-spacing: 2px;
+  margin: 0;
+  font-size: clamp(24px, 4vw, 38px);
+  line-height: 1.1;
+  text-transform: capitalize;
 }
 
 .perfil {
-    width: 55px;
-    height: 55px;
-
-    border-radius: 50%;
-
-    overflow: hidden;
-
-    background: white;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  border: 3px solid rgba(255, 255, 255, 0.65);
+  flex: 0 0 auto;
 }
 
 .perfil img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .menu-bar {
-    width: 100%;
-    height: 90px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: relative;
-
-    padding: 0 30px;
-}
-
-.menu-left {
-    position: absolute;
-    left: 30px;
-
-    color: white;
-
-    font-size: 32px;
-
-    cursor: pointer;
-
-    transition: 0.3s;
-}
-
-.menu-left:hover {
-    transform: scale(1.1);
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  background: #9f0025;
+  position: relative;
 }
 
 .menu-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 50px;
-    flex-wrap: wrap;
+  width: min(1180px, calc(100% - 32px));
+  min-height: 58px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 120px;
 }
 
 .menu-center a {
-    text-decoration: none;
-    color: white;
-    font-size: 13px;
-    font-weight: 600;
-    transition: 0.3s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    letter-spacing: 1px;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 6px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.menu-center a:hover,
+.menu-center a.active {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .menu-center a:hover {
-    transform: translateY(-3px);
-    opacity: 0.8;
+  transform: translateY(-1px);
 }
 
 .logout-area {
-    position: absolute;
-    right: 30px;
+  position: absolute;
+  right: max(16px, calc((100vw - 1180px) / 2));
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .logout-area button {
-    width: 100px;
-    padding: 10px;
-    border: none;
-    border-radius: 20px;
-    background: white;
-    color: #c4002f;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+  min-width: 86px;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: #fff;
+  color: #9f0025;
+  font-weight: 800;
 }
 
-.logout-area button:hover {
-    transform: scale(1.05);
-}
+@media (max-width: 760px) {
+  .top-bar {
+    align-items: flex-start;
+  }
 
-.header-bottom {
-    width: 100%;
-    height: 30px;
-    background: white;
-    
-}
+  .menu-center {
+    justify-content: flex-start;
+    padding: 10px 16px 64px;
+  }
 
+  .logout-area {
+    right: auto;
+    left: 16px;
+    top: auto;
+    bottom: 12px;
+    transform: none;
+  }
+}

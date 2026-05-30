@@ -1,73 +1,70 @@
-
 import api from "../services/Api.js";
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import "./Cadastro.css";
 
-export default function Cadastro() {
+export default function CadastroUser() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
 
   async function registrar(e) {
     e.preventDefault();
 
-    //nao deixa o usuario nao preencher todos os campos
     if (!user || !password) {
       alert("Preencha todos os campos!");
       return;
     }
 
     try {
-
-      //espera a requisição da api
       const response = await api.post("/registrar", {
         user,
         password,
       });
 
-      navigate("/")
-
-      //avisa se deu certo seu login
       alert(response.data.message);
-
-      //limpa os campos
       setUser("");
       setPassword("");
-      navigate("/")
-
+      navigate("/login");
     } catch (error) {
       console.error(error.response?.data || error.message);
-      alert("Erro ao cadastrar usuário");
+      alert("Erro ao cadastrar usuario");
     }
   }
 
   return (
-    <div className="container">
-      <div className="login">
-        <h2> Bem vindo, Crie sua conta</h2>
+    <section className="form-page">
+      <form className="app-form" onSubmit={registrar}>
+        <div className="form-heading">
+          <span>Nova conta</span>
+          <h2>Crie seu acesso</h2>
+        </div>
 
-        <form onSubmit={registrar}>
+        <label>
+          Usuario
           <input
-            placeholder="Usuário"
+            placeholder="Escolha um usuario"
             value={user}
             onChange={(e) => setUser(e.target.value)}
           />
+        </label>
 
+        <label>
+          Senha
           <input
             type="password"
-            placeholder="Senha"
+            placeholder="Crie uma senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+        </label>
 
-          <button>Cadastrar</button>
-          <p className="cadastrar">
-            Já tem uma conta? <Link to="/">Entrar</Link>
-          </p>
+        <button type="submit">Cadastrar</button>
 
-        </form>
-      </div>
-    </div>
+        <p className="auth-helper">
+          Ja tem uma conta? <Link to="/login">Entrar</Link>
+        </p>
+      </form>
+    </section>
   );
 }

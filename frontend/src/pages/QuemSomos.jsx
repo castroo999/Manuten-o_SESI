@@ -3,43 +3,54 @@ import eu from "../assets/eu.png";
 import bigas from "../assets/bigas.png";
 import big from "../assets/big.png";
 
+const equipe = [
+  {
+    nome: "Gustavo Castro",
+    cargo: "Desenvolvedor Full Stack do projeto",
+    foto: eu,
+  },
+  {
+    nome: "Gabriel Rodrigues",
+    cargo: "PO do projeto",
+    foto: bigas,
+  },
+  {
+    nome: "Matheus Rozante",
+    cargo: "Designer Figma",
+    foto: big,
+  },
+];
+
 export default function QuemSomos() {
   return (
-    <>
-      <div className="topo">
-        <h2>QUEM SOMOS?</h2>
+    <section className="about-page">
+      <div className="about-hero">
+        <span>Sobre o projeto</span>
+        <h2>Quem somos?</h2>
 
         <p>
-          A nossa ideia é a continuação do projeto Plantamatica, uma plataforma
-          onde a comunidade do SESI 428 pode ajudar o encarregado da manutenção
-          da escola, informando problemas, quando ocorreram e qual a gravidade
-          de cada situação.
+          A nossa ideia e a continuacao do projeto Plantamatica, uma plataforma
+          onde a comunidade do SESI 428 ajuda a equipe de manutencao da escola
+          informando problemas, quando ocorreram e a gravidade de cada situacao.
         </p>
       </div>
 
       <div className="team">
-        <h1>TEAM DEV MANUTENÇÃO</h1>
+        <div className="team-heading">
+          <span>Equipe</span>
+          <h1>Dev Manutencao</h1>
+        </div>
 
-        <div className="cards">
-          <div className="castro">
-            <img src={eu} alt="Gustavo Castro" />
-            <h3>Gustavo Castro</h3>
-            <p>Desenvolvedor Full Stack do projeto</p>
-          </div>
-
-          <div className="bigas">
-            <img src={bigas} alt="Gabriel Rodrigues" />
-            <h3>Gabriel Rodrigues</h3>
-            <p>PO do projeto</p>
-          </div>
-
-          <div className="bigas">
-            <img src={big} alt="Matheus Rozante" />
-            <h3>Matheus Rozante</h3>
-            <p>Designer Figma</p>
-          </div>
+        <div className="team-cards">
+          {equipe.map((pessoa) => (
+            <article className="team-card" key={pessoa.nome}>
+              <img src={pessoa.foto} alt={pessoa.nome} />
+              <h3>{pessoa.nome}</h3>
+              <p>{pessoa.cargo}</p>
+            </article>
+          ))}
         </div>
       </div>
-    </>
+    </section>
   );
 }

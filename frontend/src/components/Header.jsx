@@ -1,55 +1,39 @@
 import "./Header.css";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
+function getUser() {
+  try {
+    const user = localStorage.getItem("user");
+
+    if (!user) return null;
+
+    const parsed = JSON.parse(user);
+
+    return typeof parsed === "object" && parsed.user ? parsed : null;
+  } catch {
+    return null;
+  }
+}
 
 export default function Header() {
-  function getUser() {
-    try {
-      const user = localStorage.getItem("user");
-
-      if (!user) return null;
-
-      const parsed = JSON.parse(user);
-
-      if (typeof parsed === "object" && parsed.user) {
-        return parsed;
-      }
-
-      return null;
-    } catch {
-      return null;
-    }
-  }
-
   const [usuario, setUsuario] = useState(getUser());
   const [token, setToken] = useState(localStorage.getItem("token"));
-
   const navigate = useNavigate();
 
   function sair() {
     localStorage.clear();
-
     setUsuario(null);
     setToken(null);
-
     window.dispatchEvent(new Event("userChanged"));
-
     navigate("/");
   }
 
   useEffect(() => {
     function atualizarDados() {
-      const user = localStorage.getItem("user");
-      const tokenAtual = localStorage.getItem("token");
-
-      setToken(tokenAtual);
-
-      if (user) {
-        setUsuario(JSON.parse(user));
-      } else {
-        setUsuario(null);
-      }
+      setToken(localStorage.getItem("token"));
+      setUsuario(getUser());
     }
 
     window.addEventListener("userChanged", atualizarDados);
@@ -60,56 +44,48 @@ export default function Header() {
   }, []);
 
   return (
-    <>
-      <header className="top-header">
-        
-        <div className="top-bar">
-          <h1>
-            BEM-VINDO {usuario ? usuario.user.toUpperCase() : "VISITANTE"}
-          </h1>
-
-          <div className="perfil">
-            <img src={logo} alt="perfil" />
-          </div>
+    <header className="top-header">
+      <div className="top-bar">
+        <div>
+          <span className="brand-kicker">Plantamatica</span>
+          <h1>Bem-vindo, {usuario ? usuario.user : "visitante"}</h1>
         </div>
 
-        
-        <nav className="menu-bar">
-          <div className="menu-left">☰</div>
+        <div className="perfil">
+          <img src={logo} alt="Plantamatica" />
+        </div>
+      </div>
 
-          <div className="menu-center">
-            {!token && (
-              <>
-                <Link to="/">INICIO</Link>
-                {/* <Link to="/">MAPA</Link> */}
-                <Link to="/login">LOGIN</Link>
-                <Link to="/cadastro">CADASTRAR</Link>
-                <Link to="/quem-somos">QUEM SOMOS</Link>
-              </>
-            )}
-
-            {token && (
-              <>
-                <Link to="/dashboard">INICIO</Link>
-                {/* <Link to="/servicos">MAPA</Link> */}
-                <Link to="/chamados">FAZER CHAMADO</Link>
-                <Link to="/ver_chamados">VER CHAMADOS</Link>
-                <Link to="/quem-somos">QUEM SOMOS</Link>
-              </>
-            )}
-          </div>
-
-          
-          {usuario && (
-            <div className="logout-area">
-              <button onClick={sair}>SAIR</button>
-            </div>
+      <nav className="menu-bar" aria-label="Menu principal">
+        <div className="menu-center">
+          {!token && (
+            <>
+              <NavLink to="/">Inicio</NavLink>
+              <NavLink to="/login">Login</NavLink>
+              <NavLink to="/cadastro">Cadastrar</NavLink>
+              <NavLink to="/quem-somos">Quem somos</NavLink>
+            </>
           )}
-        </nav>
 
-        
-        <div className="header-bottom"></div>
-      </header>
-    </>
+          {token && (
+            <>
+              <NavLink to="/dashboard">Mapa</NavLink>
+              <NavLink to="/chamados">Abrir chamado</NavLink>
+              <NavLink to="/ver_chamados">Chamados</NavLink>
+              <NavLink to="/modelos">Modelos</NavLink>
+              <NavLink to="/quem-somos">Quem somos</NavLink>
+            </>
+          )}
+        </div>
+
+        {usuario && (
+          <div className="logout-area">
+            <button type="button" onClick={sair}>
+              Sair
+            </button>
+          </div>
+        )}
+      </nav>
+    </header>
   );
 }

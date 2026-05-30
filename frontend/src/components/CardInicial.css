@@ -1,19 +1,43 @@
-.tudo {
-  max-width: 1200px;
+.dashboard-page {
+  width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  padding: 56px 0 16px;
+  display: grid;
+  gap: 24px;
 }
 
-.tudo h2 {
-  font-family: 'poppins', sans-serif;
-  margin-bottom: 40px;
+.dashboard-heading {
+  display: grid;
+  gap: 8px;
 }
 
-.card img {
-  width: 667px;
-  height: 454px;
+.dashboard-heading span {
+  color: #b6002b;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.dashboard-heading h1 {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.1;
+}
+
+.dashboard-heading p {
+  margin: 0;
+  color: #4b5563;
+  font-size: 17px;
+}
+
+.map-panel {
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 16px 45px rgba(20, 20, 20, 0.12);
+}
+
+.map-panel img {
+  width: 100%;
+  height: auto;
 }

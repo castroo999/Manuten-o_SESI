@@ -5,19 +5,19 @@ import { MdEmail } from "react-icons/md";
 
 export default function Footer() {
   return (
-    <div className="footer">
+    <footer className="footer">
       <div className="contato">
-        <h2>Entre em contato aqui:</h2>
+        <h2>Entre em contato</h2>
 
         <div className="contatos">
-          <div className="coluna">
+          <div className="footer-column">
             <h3>GSTR</h3>
 
             <span>
               <MdEmail size={25} /> GSTR@gmail.com
             </span>
 
-              <span>
+            <span>
               <FaInstagram size={25} color="deeppink" />
               @GSTR.dev
             </span>
@@ -29,6 +29,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }

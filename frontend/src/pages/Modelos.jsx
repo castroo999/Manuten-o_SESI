@@ -46,10 +46,9 @@ export default function Modelos() {
   }
 
   function gerarPdfEEnviarZap(modelo) {
-    if (!modelo.tel) return alert("Número inválido");
+    if (!modelo.tel) return alert("Numero invalido");
 
     const numero = modelo.tel.replace(/\D/g, "");
-
     const doc = new jsPDF();
 
     doc.setFontSize(16);
@@ -65,21 +64,15 @@ export default function Modelos() {
       y += 8;
     });
 
-    const total = modelo.itens.reduce(
+    const totalModelo = modelo.itens.reduce(
       (acc, item) => acc + Number(item.preco),
       0,
     );
 
-    doc.text(`TOTAL: R$ ${total}`, 10, y + 10);
-
-    // baixa o PDF
+    doc.text(`TOTAL: R$ ${totalModelo}`, 10, y + 10);
     doc.save(`${modelo.title}.pdf`);
 
-    // mensagem zap
-    const msg = `Olá ${modelo.cliente}, tudo bem? 
-    Seu orçamento está pronto! 
-    Vou te enviar o PDF aqui `;
-
+    const msg = `Ola ${modelo.cliente}, tudo bem? Seu orcamento esta pronto! Vou te enviar o PDF aqui.`;
     const url = `https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`;
 
     window.open(url, "_blank");
@@ -88,7 +81,7 @@ export default function Modelos() {
   async function salvarComoCopia(modelo) {
     try {
       const response = await api.post("/modelos", {
-        title: modelo.title + " (cópia)",
+        title: `${modelo.title} (copia)`,
         itens: modelo.itens,
         cliente: modelo.cliente,
         tel: modelo.tel,
@@ -98,7 +91,7 @@ export default function Modelos() {
         ...prev,
         {
           id: response.data.id,
-          title: modelo.title + " (cópia)",
+          title: `${modelo.title} (copia)`,
           itens: modelo.itens,
           cliente: modelo.cliente,
           tel: modelo.tel,
@@ -115,12 +108,13 @@ export default function Modelos() {
   function addItem() {
     if (!nomeItem || !precoItem) return;
 
-    const novoItem = {
-      nome: nomeItem,
-      preco: precoItem,
-    };
-
-    setItens([...itens, novoItem]);
+    setItens([
+      ...itens,
+      {
+        nome: nomeItem,
+        preco: precoItem,
+      },
+    ]);
 
     setNomeItem("");
     setPrecoItem("");
@@ -131,7 +125,6 @@ export default function Modelos() {
 
     try {
       if (editandoId) {
-        // EDITAR
         await api.put(`/modelos/${editandoId}`, {
           title,
           itens,
@@ -148,7 +141,6 @@ export default function Modelos() {
         alert("Modelo atualizado!");
         setEditandoId(null);
       } else {
-        // CRIAR
         const response = await api.post("/modelos", {
           title,
           itens,
@@ -181,103 +173,119 @@ export default function Modelos() {
   }
 
   return (
-    <div className="container">
-      <form onSubmit={modelo}>
-        <h2>{editandoId ? "Editar Modelo" : "Criar Modelo"}</h2>
+    <section className="models-page">
+      <div className="models-heading">
+        <span>Modelos</span>
+        <h1>Orcamentos salvos</h1>
+        <p>Crie, duplique e envie modelos de orcamento por WhatsApp.</p>
+      </div>
 
-        <input
-          placeholder="Título..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+      <div className="models-layout">
+        <form className="model-form" onSubmit={modelo}>
+          <h2>{editandoId ? "Editar modelo" : "Criar modelo"}</h2>
 
-        <input
-          placeholder="Item..."
-          value={nomeItem}
-          onChange={(e) => setNomeItem(e.target.value)}
-        />
+          <input
+            placeholder="Titulo"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
-        <input
-          placeholder="Preço..."
-          value={precoItem}
-          onChange={(e) => setPrecoItem(e.target.value)}
-        />
+          <div className="model-inline">
+            <input
+              placeholder="Item"
+              value={nomeItem}
+              onChange={(e) => setNomeItem(e.target.value)}
+            />
 
-        <input
-          placeholder="Nome do cliente"
-          value={cliente}
-          onChange={(e) => setCliente(e.target.value)}
-        />
+            <input
+              placeholder="Preco"
+              value={precoItem}
+              onChange={(e) => setPrecoItem(e.target.value)}
+            />
+          </div>
 
-        <input
-          placeholder="Telefone"
-          value={tel}
-          onChange={(e) => setTel(e.target.value)}
-        />
+          <input
+            placeholder="Nome do cliente"
+            value={cliente}
+            onChange={(e) => setCliente(e.target.value)}
+          />
 
-        <button type="button" onClick={addItem}>
-          Adicionar Item
-        </button>
+          <input
+            placeholder="Telefone"
+            value={tel}
+            onChange={(e) => setTel(e.target.value)}
+          />
 
-        <ul className="itens">
-          {itens.map((item, index) => (
-            <li key={item.nome + index}>
-              {item.nome} - R${item.preco}
-            </li>
-          ))}
-        </ul>
+          <button type="button" onClick={addItem}>
+            Adicionar item
+          </button>
 
-        <div className="total">Total: R$ {total}</div>
+          <ul className="itens">
+            {itens.map((item, index) => (
+              <li key={item.nome + index}>
+                {item.nome} - R${item.preco}
+              </li>
+            ))}
+          </ul>
 
-        <button type="submit">
-          {editandoId ? "Atualizar Modelo" : "Salvar Modelo"}
-        </button>
-      </form>
+          <div className="total">Total: R$ {total}</div>
 
-      <div className="lista-modelos">
-        <h2>Modelos Salvos</h2>
+          <button type="submit">
+            {editandoId ? "Atualizar modelo" : "Salvar modelo"}
+          </button>
+        </form>
 
-        {modelos.map((modelo) => (
-          <div key={modelo.id} className="card-modelo">
-            <h3>{modelo.title}</h3>
+        <div className="lista-modelos">
+          <h2>Modelos salvos</h2>
 
-            <p><strong>Cliente:</strong> {modelo.cliente}</p>
-            <p><strong>Tel:</strong> {modelo.tel}</p>
+          {modelos.map((modelo) => (
+            <article key={modelo.id} className="card-modelo">
+              <h3>{modelo.title}</h3>
 
-            <ul>
-              {modelo.itens.map((item, index) => (
-                <li key={item.nome + index}>
-                  {item.nome} - R${item.preco}
-                </li>
-              ))}
-            </ul>
+              <p>
+                <strong>Cliente:</strong> {modelo.cliente}
+              </p>
+              <p>
+                <strong>Tel:</strong> {modelo.tel}
+              </p>
 
-            <div className="botoes-modelo">
-              <div className="botoes-linha">
-                <button onClick={() => abrirEdicao(modelo)}>Editar</button>
+              <ul>
+                {modelo.itens.map((item, index) => (
+                  <li key={item.nome + index}>
+                    {item.nome} - R${item.preco}
+                  </li>
+                ))}
+              </ul>
 
-                <button onClick={() => salvarComoCopia(modelo)}>
-                  Salvar como cópia
+              <div className="botoes-modelo">
+                <button type="button" onClick={() => abrirEdicao(modelo)}>
+                  Editar
+                </button>
+
+                <button type="button" onClick={() => salvarComoCopia(modelo)}>
+                  Salvar como copia
+                </button>
+
+                <button
+                  type="button"
+                  className="pdf"
+                  onClick={() => gerarPdfEEnviarZap(modelo)}
+                >
+                  Enviar PDF
+                </button>
+
+                <button
+                  type="button"
+                  className="btn-deletar"
+                  onClick={() => deletarModelo(modelo.id)}
+                >
+                  Deletar
                 </button>
               </div>
-
-              <button
-                className="pdf"
-                onClick={() => gerarPdfEEnviarZap(modelo)}
-              >
-                Enviar PDF
-              </button>
-
-              <button
-                className="btn-deletar"
-                onClick={() => deletarModelo(modelo.id)}
-              >
-                Deletar
-              </button>
-            </div>
-          </div>
-        ))}
+            </article>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

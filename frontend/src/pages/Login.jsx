@@ -14,29 +14,22 @@ export default function Login() {
   async function login(e) {
     e.preventDefault();
 
-    //evita q o usuario deixe um campo sem preencher
     if (!user || !password) {
       alert("Preencha todos os campos por favor!");
       return;
     }
 
     try {
-      //pega os dados da api
       const response = await api.post("/login", {
         user,
         password,
       });
 
-      // pega o token
       const token = response.data.token;
-
-      // salva o token
       localStorage.setItem("token", token);
 
-      // decodifica o token
       const decoded = JSON.parse(atob(token.split(".")[1]));
 
-      // salva token e user
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -45,74 +38,68 @@ export default function Login() {
         }),
       );
 
-      //para salvar a mudança de conta automaticamente
       window.dispatchEvent(new Event("userChanged"));
-
-      //para pegar somente o nome do usuario
       setUserModal(decoded.user);
-
-      //para abrir o modal de login
       setModalAberto(true);
 
-      // espera um pouco e depois redireciona pra dashboard
       setTimeout(() => {
         window.location.href = "/dashboard";
       }, 1500);
 
-      // limpa tudo dps
       setUser("");
       setPassword("");
     } catch (error) {
-      console.log("USER DIGITADO:", user);
       console.error(error.response?.data || error.message);
-
       alert("Erro ao fazer login");
     }
   }
 
   return (
-    <div className="container">
-      <div className="login">
-        <h2>Bem vindo, faça login para continuar!</h2>
+    <section className="form-page">
+      <form className="app-form" onSubmit={login}>
+        <div className="form-heading">
+          <span>Acesso</span>
+          <h2>Faca login para continuar</h2>
+        </div>
 
-        <form onSubmit={login}>
+        <label>
+          Usuario
           <input
-            placeholder="Login"
+            placeholder="Digite seu usuario"
             value={user}
             onChange={(e) => setUser(e.target.value)}
           />
+        </label>
 
+        <label>
+          Senha
           <input
             type="password"
-            placeholder="Senha"
+            placeholder="Digite sua senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+        </label>
 
-          <button type="submit">Entrar</button>
+        <button type="submit">Entrar</button>
 
-          <p className="cadastrar">
-            Não tem conta? <Link to="/cadastro">Cadastre-se</Link>
-          </p>
-        </form>
-      </div>
+        <p className="auth-helper">
+          Nao tem conta? <Link to="/cadastro">Cadastre-se</Link>
+        </p>
+      </form>
 
       {modalAberto && (
         <div className="overlay4">
           <div className="modal3">
             <div className="sucesso">
               <h3>
-                <ThumbsUp
-                  color="green"
-                  size={30}
-                  style={{ marginRight: "8px" }}
-                />
-                Login realizado com sucesso! Bem Vindo, {userModal}!
+                <ThumbsUp color="green" size={30} />
+                Login realizado com sucesso! Bem-vindo, {userModal}!
               </h3>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }

@@ -1,12 +1,16 @@
-import "./VerServico.css";
+import "./VerChamado.css";
 import { useEffect, useState } from "react";
 import { FaRegSmile } from "react-icons/fa";
 import { CgSmileNeutral } from "react-icons/cg";
 import { ImAngry } from "react-icons/im";
 import api from "../services/Api";
 
-export default function VerServico() {
-  const usuarioLogado = JSON.parse(localStorage.getItem("user"));
+function getStatusClass(status = "") {
+  return status.replace(/\s+/g, "-").toLowerCase();
+}
+
+export default function VerChamado() {
+  const usuarioLogado = JSON.parse(localStorage.getItem("user") || "null");
   const [modalAberto, setModalAberto] = useState(false);
   const [modalDeletar, setModalDeletar] = useState(false);
   const [modalSucessoEditar, setModalSucessoEditar] = useState(false);
@@ -21,27 +25,20 @@ export default function VerServico() {
   const [filtro, setFiltro] = useState("");
   const token = localStorage.getItem("token");
 
-  // filtro
   const chamadosFiltrados = chamados.filter((item) => {
     const texto = filtro.toLowerCase();
 
     return (
-      item.titulo.toLowerCase().includes(texto) ||
-      item.local.toLowerCase().includes(texto) ||
-      item.status.toLowerCase().includes(texto)
+      item.titulo?.toLowerCase().includes(texto) ||
+      item.local?.toLowerCase().includes(texto) ||
+      item.status?.toLowerCase().includes(texto)
     );
   });
 
-  // carregar chamados
   useEffect(() => {
     async function carregarChamados() {
       try {
-        const response = await api.get("/chamados", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        const response = await api.get("/chamados");
         setChamados(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error(error);
@@ -51,69 +48,42 @@ export default function VerServico() {
     carregarChamados();
   }, [token]);
 
-  // deletar
   async function deletar(id) {
     try {
-      await api.delete(`/chamados/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      await api.delete(`/chamados/${id}`);
       setChamados((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       console.log(error);
-
       alert("Erro ao deletar chamado");
     }
   }
 
-  // abrir modal
   function abrirModal(item) {
     setEditandoId(item.id);
-
     setTitulo(item.titulo);
-
     setDescricao(item.descricao);
-
     setLocal(item.local);
-
     setPrioridade(item.prioridade);
-
     setStatus(item.status);
-
     setModalAberto(true);
   }
 
-  // fechar modal
   function fecharModal() {
     setModalAberto(false);
-
     setModalDeletar(false);
-
     setModalSucessoEditar(false);
-
     setEditandoId(null);
   }
 
-  // editar chamado
   async function editar() {
     try {
-      await api.put(
-        `/chamados/${editandoId}`,
-        {
-          titulo,
-          descricao,
-          local,
-          prioridade,
-          status,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await api.put(`/chamados/${editandoId}`, {
+        titulo,
+        descricao,
+        local,
+        prioridade,
+        status,
+      });
 
       setChamados((prev) =>
         prev.map((item) =>
@@ -131,45 +101,52 @@ export default function VerServico() {
       );
 
       fecharModal();
-
       setModalSucessoEditar(true);
     } catch (error) {
       console.log(error);
-
       alert("Erro ao editar chamado");
     }
   }
 
   return (
-    <div className="container2">
-      <div className="listados">
-        {usuarioLogado?.role === "admin" && (
-          <input
-            type="text"
-            className="filtro"
-            placeholder="Filtrar chamados..."
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          />
-        )}
+    <section className="tickets-page">
+      <div className="tickets-heading">
+        <span>Atendimento</span>
+        <h1>Chamados registrados</h1>
+        <p>Acompanhe os problemas informados e atualize o andamento.</p>
+      </div>
 
-        <span>Chamados Registrados</span>
+      {usuarioLogado?.role === "admin" && (
+        <input
+          type="text"
+          className="filtro"
+          placeholder="Filtrar por titulo, local ou status"
+          value={filtro}
+          onChange={(e) => setFiltro(e.target.value)}
+        />
+      )}
 
-        <ul>
-          {chamadosFiltrados.map((item) => (
-            <li key={item.id} className={item.status}>
-              <h3>TÍTULO: {item.titulo}</h3>
+      <ul className="tickets-grid">
+        {chamadosFiltrados.map((item) => {
+          const statusClass = getStatusClass(item.status);
+
+          return (
+            <li key={item.id} className={`ticket-card ${statusClass}`}>
+              <div className="ticket-top">
+                <span className={`status ${statusClass}`}>{item.status}</span>
+                <h3>{item.titulo}</h3>
+              </div>
 
               <p>
-                <strong>DESCRIÇÃO:</strong> {item.descricao}
+                <strong>Descricao:</strong> {item.descricao}
               </p>
 
               <p>
-                <strong>LOCAL:</strong> {item.local}
+                <strong>Local:</strong> {item.local}
               </p>
 
-              <p className="prioridade-box">
-                <strong>PRIORIDADE:</strong>
+              <div className="prioridade-box">
+                <strong>Prioridade</strong>
 
                 {item.prioridade === "baixa" && (
                   <>
@@ -180,8 +157,8 @@ export default function VerServico() {
 
                 {item.prioridade === "media" && (
                   <>
-                    <CgSmileNeutral color="yellow" size={38} />
-                    <span>Média</span>
+                    <CgSmileNeutral color="#d99b00" size={34} />
+                    <span>Media</span>
                   </>
                 )}
 
@@ -191,130 +168,145 @@ export default function VerServico() {
                     <span>Alta</span>
                   </>
                 )}
-              </p>
+              </div>
 
               <p>
-                <strong>DATA:</strong>{" "}
+                <strong>Data:</strong>{" "}
                 {new Date(item.criado_em).toLocaleString("pt-BR")}
               </p>
 
-              <p>
-                <strong>STATUS:</strong>
+              {usuarioLogado?.role === "admin" && (
+                <div className="botoes">
+                  <button type="button" onClick={() => abrirModal(item)}>
+                    Editar
+                  </button>
 
-                <span className={`status ${item.status}`}>{item.status}</span>
-              </p>
-
-              <div className="botoes">
-                {usuarioLogado?.role === "admin" && (
-                  <button onClick={() => abrirModal(item)}>Editar</button>
-                )}
-
-                {usuarioLogado?.role === "admin" && (
                   <button
+                    type="button"
+                    className="danger-button"
                     onClick={() => {
                       setIdParaDeletar(item.id);
-
                       setModalDeletar(true);
                     }}
                   >
                     Deletar
                   </button>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-
-        {modalDeletar && (
-          <div className="overlay4" onClick={fecharModal}>
-            <div className="modal3" onClick={(e) => e.stopPropagation()}>
-              <div className="certeza">
-                <h3>Deseja realmente deletar este chamado?</h3>
-
-                <div className="botoes">
-                  <button
-                    onClick={() => {
-                      deletar(idParaDeletar);
-
-                      fecharModal();
-                    }}
-                  >
-                    Confirmar
-                  </button>
-
-                  <button onClick={fecharModal}>Cancelar</button>
                 </div>
-              </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+
+      {chamadosFiltrados.length === 0 && (
+        <div className="empty-state">Nenhum chamado encontrado.</div>
+      )}
+
+      {modalDeletar && (
+        <div className="overlay4" onClick={fecharModal}>
+          <div className="modal3" onClick={(e) => e.stopPropagation()}>
+            <h3>Deseja realmente deletar este chamado?</h3>
+
+            <div className="botoes">
+              <button
+                type="button"
+                onClick={() => {
+                  deletar(idParaDeletar);
+                  fecharModal();
+                }}
+              >
+                Confirmar
+              </button>
+
+              <button type="button" onClick={fecharModal}>
+                Cancelar
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {modalSucessoEditar && (
-          <div className="overlay4" onClick={fecharModal}>
-            <div className="modal3" onClick={(e) => e.stopPropagation()}>
-              <h3>Chamado atualizado com sucesso!</h3>
-
-              <button onClick={fecharModal}>Fechar</button>
-            </div>
+      {modalSucessoEditar && (
+        <div className="overlay4" onClick={fecharModal}>
+          <div className="modal3" onClick={(e) => e.stopPropagation()}>
+            <h3>Chamado atualizado com sucesso!</h3>
+            <button type="button" onClick={fecharModal}>
+              Fechar
+            </button>
           </div>
-        )}
+        </div>
+      )}
 
-        {modalAberto && (
-          <div className="overlay2" onClick={fecharModal}>
-            <div className="modal" onClick={(e) => e.stopPropagation()}>
-              <h2>Editar Chamado</h2>
+      {modalAberto && (
+        <div className="overlay2" onClick={fecharModal}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Editar chamado</h2>
 
+            <label>
+              Titulo
               <input
-                placeholder="Título"
+                placeholder="Titulo"
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
               />
+            </label>
 
+            <label>
+              Local
               <input
                 placeholder="Local"
                 value={local}
                 onChange={(e) => setLocal(e.target.value)}
               />
+            </label>
 
+            <label>
+              Descricao
               <textarea
-                placeholder="Descrição"
+                placeholder="Descricao"
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 maxLength={500}
               />
+            </label>
 
+            <label>
+              Prioridade
               <select
                 value={prioridade}
                 onChange={(e) => setPrioridade(e.target.value)}
               >
                 <option value="baixa">Baixa</option>
-
-                <option value="media">Média</option>
-
+                <option value="media">Media</option>
                 <option value="alta">Alta</option>
               </select>
+            </label>
 
+            <label>
+              Status
               <select
-                className={status}
+                className={getStatusClass(status)}
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="aberto">Aberto</option>
-
                 <option value="em andamento">Em andamento</option>
-
                 <option value="resolvido">Resolvido</option>
               </select>
+            </label>
 
-              <div className="botoes">
-                <button onClick={editar}>Salvar</button>
+            <div className="botoes">
+              <button type="button" onClick={editar}>
+                Salvar
+              </button>
 
-                <button onClick={fecharModal}>Cancelar</button>
-              </div>
+              <button type="button" onClick={fecharModal}>
+                Cancelar
+              </button>
             </div>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </section>
   );
 }

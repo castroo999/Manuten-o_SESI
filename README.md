@@ -37,12 +37,10 @@ O objetivo do projeto é facilitar a comunicação entre a comunidade escolar e 
 ✅ Cadastro de usuários  
 ✅ Login com autenticação JWT  
 ✅ Sistema de permissões (admin e usuário)  
-✅ Criação de chamados  
-✅ Dashboard de chamados  
+✅ Criação de chamados    
 ✅ Edição de chamados  
 ✅ Exclusão de chamados  
 ✅ Filtro de chamados  
-✅ Integração com WhatsApp  
 ✅ Sistema de prioridade  
 ✅ Interface moderna e responsiva  
 

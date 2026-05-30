@@ -7,7 +7,6 @@ export default function Cadastro() {
   const [descricao, setDescricao] = useState("");
   const [local, setLocal] = useState("");
   const [prioridade, setPrioridade] = useState("");
-
   const [modalAberto, setModalAberto] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -26,22 +25,12 @@ export default function Cadastro() {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
-
-      await api.post(
-        "/chamados",
-        {
-          titulo,
-          descricao,
-          local,
-          prioridade,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await api.post("/chamados", {
+        titulo,
+        descricao,
+        local,
+        prioridade,
+      });
 
       setModalAberto(true);
 
@@ -55,7 +44,6 @@ export default function Cadastro() {
       setPrioridade("");
     } catch (error) {
       console.error(error);
-
       alert("Erro ao abrir chamado");
     } finally {
       setLoading(false);
@@ -63,44 +51,56 @@ export default function Cadastro() {
   }
 
   return (
-    <div className="container">
-      <form onSubmit={enviar}>
-        <h1>Abrir Chamado</h1>
+    <section className="form-page">
+      <form className="app-form" onSubmit={enviar}>
+        <div className="form-heading">
+          <span>Novo chamado</span>
+          <h1>Abrir chamado</h1>
+        </div>
 
-        <input
-          placeholder="Título"
-          value={titulo}
-          onChange={(e) => setTitulo(e.target.value)}
-        />
+        <label>
+          Titulo
+          <input
+            placeholder="Ex: Luz queimada no laboratorio"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+          />
+        </label>
 
-        <input
-          placeholder="Local"
-          value={local}
-          onChange={(e) => setLocal(e.target.value)}
-        />
+        <label>
+          Local
+          <input
+            placeholder="Ex: Bloco B, sala 3"
+            value={local}
+            onChange={(e) => setLocal(e.target.value)}
+          />
+        </label>
 
-        <select
-          value={prioridade}
-          onChange={(e) => setPrioridade(e.target.value)}
-        >
-          <option value="">Selecione prioridade</option>
+        <label>
+          Prioridade
+          <select
+            value={prioridade}
+            onChange={(e) => setPrioridade(e.target.value)}
+          >
+            <option value="">Selecione prioridade</option>
+            <option value="baixa">Baixa</option>
+            <option value="media">Media</option>
+            <option value="alta">Alta</option>
+          </select>
+        </label>
 
-          <option value="baixa">Baixa</option>
-
-          <option value="media">Média</option>
-
-          <option value="alta">Alta</option>
-        </select>
-
-        <textarea
-          placeholder="Descrição"
-          value={descricao}
-          onChange={(e) => setDescricao(e.target.value)}
-          maxLength={500}
-        />
+        <label>
+          Descricao
+          <textarea
+            placeholder="Descreva o problema com detalhes"
+            value={descricao}
+            onChange={(e) => setDescricao(e.target.value)}
+            maxLength={500}
+          />
+        </label>
 
         <button type="submit" disabled={loading}>
-          {loading ? "Enviando..." : "Abrir Chamado"}
+          {loading ? "Enviando..." : "Abrir chamado"}
         </button>
       </form>
 
@@ -113,6 +113,6 @@ export default function Cadastro() {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }
