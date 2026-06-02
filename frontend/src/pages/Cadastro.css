@@ -6,7 +6,7 @@
   justify-content: center;
 }
 
-.app-form {
+.formulario {
   width: min(100%, 520px);
   display: grid;
   gap: 18px;
@@ -16,28 +16,28 @@
   box-shadow: 0 16px 45px rgba(20, 20, 20, 0.12);
 }
 
-.form-heading {
+.form-topo {
   display: grid;
   gap: 6px;
   margin-bottom: 4px;
 }
 
-.form-heading span {
+.form-topo span {
   color: #b6002b;
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
 }
 
-.form-heading h1,
-.form-heading h2 {
+.form-topo h1,
+.form-topo h2 {
   margin: 0;
   color: #151515;
   font-size: 30px;
   line-height: 1.15;
 }
 
-.app-form label {
+.formulario label {
   display: grid;
   gap: 8px;
   color: #333;
@@ -45,9 +45,9 @@
   font-weight: 700;
 }
 
-.app-form input,
-.app-form select,
-.app-form textarea {
+.formulario input,
+.formulario select,
+.formulario textarea {
   width: 100%;
   border: 1px solid #d9dde3;
   border-radius: 6px;
@@ -60,30 +60,25 @@
     box-shadow 0.2s ease;
 }
 
-.app-form textarea {
+.formulario textarea {
   min-height: 130px;
   resize: vertical;
 }
 
-.app-form input:focus,
-.app-form select:focus,
-.app-form textarea:focus {
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus {
   border-color: #b6002b;
   box-shadow: 0 0 0 4px rgba(182, 0, 43, 0.12);
 }
 
-.app-form button {
+.formulario button {
   min-height: 48px;
   border: 0;
   border-radius: 6px;
   background: #f2a900;
   color: #fff;
   font-weight: 800;
-}
-
-.app-form button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
 }
 
 .auth-helper {
@@ -125,10 +120,4 @@
 .modal3 h3 {
   margin: 0;
   font-size: 18px;
-}
-
-@media (max-width: 560px) {
-  .app-form {
-    padding: 24px;
-  }
 }

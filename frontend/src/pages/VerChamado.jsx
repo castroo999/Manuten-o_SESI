@@ -109,8 +109,8 @@ export default function VerChamado() {
   }
 
   return (
-    <section className="tickets-page">
-      <div className="tickets-heading">
+    <section className="page-chamados">
+      <div className="cabeçalho-chamado">
         <span>Atendimento</span>
         <h1>Chamados registrados</h1>
         <p>Acompanhe os problemas informados e atualize o andamento.</p>
@@ -126,7 +126,7 @@ export default function VerChamado() {
         />
       )}
 
-      <ul className="tickets-grid">
+      <ul className="chamados">
         {chamadosFiltrados.map((item) => {
           const statusClass = getStatusClass(item.status);
 
@@ -199,7 +199,7 @@ export default function VerChamado() {
       </ul>
 
       {chamadosFiltrados.length === 0 && (
-        <div className="empty-state">Nenhum chamado encontrado.</div>
+        <div className="vazio">Nenhum chamado encontrado.</div>
       )}
 
       {modalDeletar && (

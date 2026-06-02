@@ -1,4 +1,4 @@
-.tickets-page {
+.page-chamados {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
   padding: 56px 0 16px;
@@ -6,25 +6,25 @@
   gap: 24px;
 }
 
-.tickets-heading {
+.cabeçalho-chamado {
   display: grid;
   gap: 8px;
 }
 
-.tickets-heading span {
+.cabeçalho-chamado span {
   color: #b6002b;
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
 }
 
-.tickets-heading h1 {
+.cabeçalho-chamado h1 {
   margin: 0;
   font-size: clamp(32px, 5vw, 48px);
   line-height: 1.1;
 }
 
-.tickets-heading p {
+.cabeçalho-chamado p {
   margin: 0;
   color: #4b5563;
   font-size: 17px;
@@ -44,7 +44,7 @@
   box-shadow: 0 0 0 4px rgba(182, 0, 43, 0.12);
 }
 
-.tickets-grid {
+.chamados {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
@@ -172,7 +172,7 @@ button:hover{
   background: #b6002b;
 }
 
-.empty-state {
+.vazio {
   padding: 28px;
   border: 1px dashed #c7cbd1;
   border-radius: 8px;

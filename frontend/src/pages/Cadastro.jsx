@@ -53,8 +53,8 @@ export default function Cadastro() {
 
   return (
     <section className="form-page">
-      <form className="app-form" onSubmit={enviar}>
-        <div className="form-heading">
+      <form className="formulario" onSubmit={enviar}>
+        <div className="form-topo">
           <span>Novo chamado</span>
           <h1>Abrir chamado</h1>
         </div>
@@ -62,7 +62,7 @@ export default function Cadastro() {
         <label>
           Titulo
           <input
-            placeholder="Ex: Luz queimada no laboratorio"
+            placeholder="Ex: mesa quebrada sala 9"
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
           />
@@ -71,7 +71,7 @@ export default function Cadastro() {
         <label>
           Local
           <input
-            placeholder="Ex: Bloco B, sala 3"
+            placeholder="Ex: Bloco 1, sala 3"
             value={local}
             onChange={(e) => setLocal(e.target.value)}
           />
