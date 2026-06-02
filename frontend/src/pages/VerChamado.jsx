@@ -4,6 +4,8 @@ import { FaRegSmile } from "react-icons/fa";
 import { CgSmileNeutral } from "react-icons/cg";
 import { ImAngry } from "react-icons/im";
 import api from "../services/Api";
+// import { toast } from "react-toastify";
+
 
 //transforma o status em uma classe css
 function getStatusClass(status = "") {

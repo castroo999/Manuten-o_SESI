@@ -2,22 +2,23 @@ import api from "../services/Api.js";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ThumbsUp } from "lucide-react";
+import { toast } from "react-toastify";
 import "./Cadastro.css";
 import "./Login.css";
 
 export default function Login() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  const [modalAberto, setModalAberto] = useState(false);
-  const [userModal, setUserModal] = useState("");
 
   async function login(e) {
     e.preventDefault();
 
     //pega o user e a senha para logar
     if (!user || !password) {
-      alert("Preencha todos os campos por favor!");
+      toast.warning("Preencha todos os campos por favor!");
       return;
+    }else{
+      toast.success("Login feito com sucesso");
     }
 
     try {
@@ -44,8 +45,6 @@ export default function Login() {
 
       //dps de logar é redirecionado para a pagina inicial do site
       window.dispatchEvent(new Event("userChanged"));
-      setUserModal(decoded.user);
-      setModalAberto(true);
 
       setTimeout(() => {
         window.location.href = "/dashboard";
@@ -94,18 +93,6 @@ export default function Login() {
         </p>
       </form>
 
-      {modalAberto && (
-        <div className="overlay4">
-          <div className="modal3">
-            <div className="sucesso">
-              <h3>
-                <ThumbsUp color="green" size={30} />
-                Login realizado com sucesso! Bem-vindo, {userModal}!
-              </h3>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

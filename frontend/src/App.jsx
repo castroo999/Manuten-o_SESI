@@ -11,6 +11,7 @@ import QuemSomos from "./pages/QuemSomos";
 
 export default function App() {
   return (
+    <>
     <Routes>
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
@@ -46,5 +47,6 @@ export default function App() {
         />
       </Route>
     </Routes>
+    </>
   );
 }

@@ -5,3 +5,7 @@
   gap: 10px;
   line-height: 1.4;
 }
+
+.auth-helper a:hover{
+  color: #eb043a;
+}

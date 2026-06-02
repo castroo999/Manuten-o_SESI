@@ -1,26 +1,27 @@
 import "./Cadastro.css";
 import api from "../services/Api.js";
 import { useState } from "react";
+import { toast } from "react-toastify";
+
 
 export default function Cadastro() {
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [local, setLocal] = useState("");
   const [prioridade, setPrioridade] = useState("");
-  const [modalAberto, setModalAberto] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  function fecharModal() {
-    setModalAberto(false);
-  }
 
   async function enviar(e) {
     e.preventDefault();
 
     //alerta e nao deixa ficar campo sem ser preenchido
     if (!titulo || !descricao || !local || !prioridade) {
-      alert("Preencha todos os campos!");
+      toast.warning("Preencha todos os campos!");
       return;
+    }else{
+      toast.success("Chamado aberto com sucesso!");
+
     }
 
     setLoading(true);
@@ -34,13 +35,6 @@ export default function Cadastro() {
         prioridade,
       });
 
-      setModalAberto(true);
-
-      //dps de 5 segundos o modal fecha
-      setTimeout(() => {
-        setModalAberto(false);
-      }, 5000);
-
       setTitulo("");
       setDescricao("");
       setLocal("");
@@ -48,7 +42,7 @@ export default function Cadastro() {
       
     } catch (error) {
       console.error(error);
-      alert("Erro ao abrir chamado");
+      toast.warning("Erro ao abrir chamado");
     } finally {
       setLoading(false);
     }
@@ -107,16 +101,6 @@ export default function Cadastro() {
           {loading ? "Enviando..." : "Abrir chamado"}
         </button>
       </form>
-
-      {modalAberto && (
-        <div className="overlay3" onClick={fecharModal}>
-          <div className="modal2" onClick={(e) => e.stopPropagation()}>
-            <div className="alert">
-              <h3>Chamado enviado com sucesso!</h3>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }
