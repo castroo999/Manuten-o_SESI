@@ -36,7 +36,7 @@ export async function initDB() {
     "SELECT * FROM user WHERE user = ?",
     ["castro"]
   );
-  
+
   if (!adminExiste) {
 
     const id = randomUUID();

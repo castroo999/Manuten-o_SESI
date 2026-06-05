@@ -38,7 +38,7 @@ export default function QuemSomos() {
       <div className="time">
         <div className="time-topo">
           <span>Equipe</span>
-          <h1>Dev Manutencao</h1>
+          <h1>Dev Manutenção</h1>
         </div>
 
         <div className="time-cards">

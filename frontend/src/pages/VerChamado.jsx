@@ -150,7 +150,9 @@ export default function VerChamado() {
         <p>Acompanhe os problemas informados e atualize o andamento.</p>
       </div>
 
-      {usuarioLogado?.role === "admin" && (
+      {usuarioLogado?.role === 'superadmin' ||
+        usuarioLogado?.role === 'admin'
+      && (
         <input
           type="text"
           className="filtro"
@@ -209,7 +211,9 @@ export default function VerChamado() {
                 {new Date(item.criado_em).toLocaleString("pt-BR")}
               </p>
 
-              {usuarioLogado?.role === "admin" && (
+              {usuarioLogado?.role === 'superadmin' ||
+                usuarioLogado?.role === 'admin' &&
+              (
                 <div className="botoes">
                   <button type="button" onClick={() => abrirModal(item)}>
                     Editar

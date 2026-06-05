@@ -15,8 +15,6 @@ export async function verificarToken(request, reply) {
     //verifica se o token é válido
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log("USUARIO LOGADO:", decoded);
-
     //salva os dados do usuário
     request.user = decoded;
 

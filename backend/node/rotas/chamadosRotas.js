@@ -73,7 +73,8 @@ export async function chamadosRoutes(server, db) {
 
       try {
 
-        if (request.user.role === "admin") {
+        if (request.user.role === "admin" || 
+            request.user.role === "superadmin") {
 
           return await db.all(
             "SELECT * FROM chamados ORDER BY criado_em DESC"
@@ -108,7 +109,9 @@ export async function chamadosRoutes(server, db) {
 
       try {
 
-        if (request.user.role !== "admin") {
+        if (request.user.role !== "superadmin" ||
+            request.user.role !== "admin"
+        ) {
           return reply.status(403).send({
             error: "Apenas admin pode editar"
           });
@@ -128,21 +131,14 @@ export async function chamadosRoutes(server, db) {
           `
           UPDATE chamados
           SET
-            titulo = ?,
-            descricao = ?,
-            local = ?,
-            prioridade = ?,
-            status = ?
+              titulo = ?,
+              descricao = ?,
+              local = ?,
+              prioridade = ?,
+              status = ?
           WHERE id = ?
           `,
-          [
-            titulo,
-            descricao,
-            local,
-            prioridade,
-            status,
-            id
-          ]
+          [titulo, descricao, local, prioridade, status, id]
         );
 
         return reply.send({
@@ -168,7 +164,9 @@ export async function chamadosRoutes(server, db) {
 
       try {
 
-        if (request.user.role !== "admin") {
+        if (request.user.role !== "superadmin" ||
+            request.user.role !== "admin"
+        ) {
           return reply.status(403).send({
             error: "Apenas admin pode deletar"
           });

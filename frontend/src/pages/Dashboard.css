@@ -1,6 +1,6 @@
 .comeco {
-    text-align: center;
-    padding: 40px 20px;
+  text-align: center;
+  padding: 40px 20px;
 }
 
 .adh {
@@ -15,71 +15,74 @@
 }
 
 .comeco h1 {
-    margin-top: 10px;
-    color: #222;
+  margin-top: 10px;
+  color: #222;
 }
 
 
 .stats-cards {
-    width: 90%;
-    max-width: 1400px;
-    margin: 0 auto 30px;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto 30px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
 }
 
 .card-stat {
-    background: #fff;
-    border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    transition: 0.3s;
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
 }
 
 .card-stat:hover {
-    transform: translateY(-4px);
+  transform: translateY(-4px);
 }
 
 .card-stat span {
-    display: block;
-    color: #666;
-    margin-bottom: 10px;
-    font-size: 14px;
+  display: block;
+  color: #666;
+  margin-bottom: 10px;
+  font-size: 14px;
 }
 
 .card-stat h2 {
-    font-size: 38px;
-    color: #111;
+  font-size: 38px;
+  color: #111;
 }
 
 .container-info {
-    width: 90%;
-    max-width: 1400px;
-    margin: 0 auto 50px;
-    display: grid;
-    gap: 25px;
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto 50px;
+  display: grid;
+  gap: 25px;
 }
 
 .grafico {
-    background: #fff;
-    border-radius: 16px;
-    padding: 25px;
-    min-height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+.pizza {
+  margin-bottom: 10px;
 }
 
 .grafico h3 {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .grafico p {
-    color: #666;
+  color: #666;
 }
 
 .tabela {
@@ -94,7 +97,7 @@
   background: white;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0,0,0,.08);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
 }
 
 .tabela caption {
@@ -142,5 +145,3 @@
   transform: translateY(-2px);
   background: #b91c1c;
 }
-
-

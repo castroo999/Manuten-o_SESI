@@ -24,6 +24,9 @@ export default function Header() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
+  //verifica se é adm
+  const isAdmin = usuario?.role === "admin" || usuario?.role === "superadmin";
+
   //função de logout
   function sair() {
     localStorage.clear();
@@ -81,7 +84,7 @@ export default function Header() {
               <NavLink to="/ver_chamados">Chamados</NavLink>
               <NavLink to="/quem-somos">Quem somos</NavLink>
 
-              {usuario?.role === "superadmin" && (
+              {isAdmin && (
                 <NavLink to="/dashboard_admin">Dashboard Admin</NavLink>
               )}
             </>
