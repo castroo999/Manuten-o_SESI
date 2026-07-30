@@ -211,8 +211,7 @@ export default function VerChamado() {
                 {new Date(item.criado_em).toLocaleString("pt-BR")}
               </p>
 
-              {usuarioLogado?.role === 'superadmin' ||
-                usuarioLogado?.role === 'admin' &&
+              {usuarioLogado?.role === 'superadmin' &&
               (
                 <div className="botoes">
                   <button type="button" onClick={() => abrirModal(item)}>
