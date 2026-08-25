@@ -1,5 +1,51 @@
 import { randomUUID } from "node:crypto";
+import { mkdir, writeFile } from "node:fs/promises";
+import { extname, join } from "node:path";
 import { verificarToken } from "../middleware/auth.js";
+
+const uploadDir = join(process.cwd(), "uploads", "chamados");
+
+async function lerDadosChamado(request) {
+  if (!request.isMultipart()) {
+    return {
+      campos: request.body,
+      foto: ""
+    };
+  }
+
+  const campos = {};
+  let foto = "";
+
+  for await (const parte of request.parts()) {
+    if (parte.type === "file") {
+      if (!parte.filename) {
+        continue;
+      }
+
+      if (!parte.mimetype.startsWith("image/")) {
+        throw new Error("A foto precisa ser uma imagem");
+      }
+
+      await mkdir(uploadDir, { recursive: true });
+
+      const extensao = extname(parte.filename) || ".jpg";
+      const nomeArquivo = `${randomUUID()}${extensao}`;
+      const caminhoArquivo = join(uploadDir, nomeArquivo);
+      const buffer = await parte.toBuffer();
+
+      await writeFile(caminhoArquivo, buffer);
+      foto = `/uploads/chamados/${nomeArquivo}`;
+      continue;
+    }
+
+    campos[parte.fieldname] = parte.value;
+  }
+
+  return {
+    campos,
+    foto
+  };
+}
 
 export async function chamadosRoutes(server, db) {
 
@@ -11,12 +57,13 @@ export async function chamadosRoutes(server, db) {
 
       try {
 
+        const { campos, foto } = await lerDadosChamado(request);
         const {
           titulo,
           descricao,
           local,
           prioridade
-        } = request.body;
+        } = campos;
 
         if (!titulo || !descricao) {
           return reply.status(400).send({
@@ -35,8 +82,8 @@ export async function chamadosRoutes(server, db) {
         await db.run(
           `
           INSERT INTO chamados
-          (id, titulo, descricao, local, prioridade, user_id, status, criado_em)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          (id, titulo, descricao, local, prioridade, user_id, status, foto, criado_em)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
           `,
           [
             id,
@@ -46,6 +93,7 @@ export async function chamadosRoutes(server, db) {
             prioridade || "media",
             user_id,
             status,
+            foto,
             criado_em
           ]
         );
@@ -57,6 +105,12 @@ export async function chamadosRoutes(server, db) {
       } catch (error) {
 
         console.log(error);
+
+        if (error.message === "A foto precisa ser uma imagem") {
+          return reply.status(400).send({
+            error: error.message
+          });
+        }
 
         return reply.status(500).send({
           error: "Erro ao criar chamado"

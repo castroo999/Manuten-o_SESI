@@ -68,6 +68,7 @@ export async function adminRoutes(server, db) {
         SELECT
           user.id,
           user.user,
+          user.email,
           user.role,
           COUNT(chamados.id) as chamados
         FROM user

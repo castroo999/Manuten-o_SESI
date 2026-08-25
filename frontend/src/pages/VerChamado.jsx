@@ -150,17 +150,16 @@ export default function VerChamado() {
         <p>Acompanhe os problemas informados e atualize o andamento.</p>
       </div>
 
-      {usuarioLogado?.role === 'superadmin' ||
-        usuarioLogado?.role === 'admin'
-      && (
-        <input
-          type="text"
-          className="filtro"
-          placeholder="Filtrar por titulo, local ou status"
-          value={filtro}
-          onChange={(e) => setFiltro(e.target.value)}
-        />
-      )}
+      {usuarioLogado?.role === "superadmin" ||
+        (usuarioLogado?.role === "admin" && (
+          <input
+            type="text"
+            className="filtro"
+            placeholder="Filtrar por titulo, local ou status"
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+          />
+        ))}
 
       <ul className="chamados">
         {chamadosFiltrados.map((item) => {
@@ -180,6 +179,20 @@ export default function VerChamado() {
               <p>
                 <strong>Local:</strong> {item.local}
               </p>
+
+              {item.foto && (
+                <a
+                  href={`http://localhost:3000${item.foto}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ticket-foto"
+                >
+                  <img
+                    src={`http://localhost:3000${item.foto}`}
+                    alt={`Foto do chamado ${item.titulo}`}
+                  />
+                </a>
+              )}
 
               <div className="prioridade-box">
                 <strong>Prioridade</strong>
@@ -211,8 +224,8 @@ export default function VerChamado() {
                 {new Date(item.criado_em).toLocaleString("pt-BR")}
               </p>
 
-              {usuarioLogado?.role === 'superadmin' &&
-              (
+              {(usuarioLogado?.role === "superadmin" ||
+                usuarioLogado?.role === "admin") && (
                 <div className="botoes">
                   <button type="button" onClick={() => abrirModal(item)}>
                     Editar

@@ -10,11 +10,18 @@ export async function authRoutes(server, db) {
 
     try {
 
-      const { user, password } = request.body;
+      const { user, email, password } = request.body;
+      const emailNormalizado = email?.trim().toLowerCase();
 
-      if (!user || !password) {
+      if (!user || !emailNormalizado || !password) {
         return reply.status(400).send({
           error: "Preencha todos os campos!"
+        });
+      }
+
+      if (!emailNormalizado.includes("@")) {
+        return reply.status(400).send({
+          error: "Informe um email valido!"
         });
       }
 
@@ -25,13 +32,13 @@ export async function authRoutes(server, db) {
       }
 
       const existe = await db.get(
-        "SELECT * FROM user WHERE user = ?",
-        [user]
+        "SELECT * FROM user WHERE user = ? OR lower(email) = ?",
+        [user, emailNormalizado]
       );
 
       if (existe) {
         return reply.status(400).send({
-          error: "Usuário já existe"
+          error: "Usuario ou email ja existe"
         });
       }
 
@@ -42,8 +49,8 @@ export async function authRoutes(server, db) {
       const role = "user";
 
       await db.run(
-        "INSERT INTO user (id, user, password, role) VALUES (?, ?, ?, ?)",
-        [id, user, hash, role]
+        "INSERT INTO user (id, user, email, password, role) VALUES (?, ?, ?, ?, ?)",
+        [id, user, emailNormalizado, hash, role]
       );
 
       return reply.status(201).send({
@@ -65,17 +72,18 @@ export async function authRoutes(server, db) {
 
     try {
 
-      const { user, password } = request.body;
+      const { email, password } = request.body;
+      const emailNormalizado = email?.trim().toLowerCase();
 
-      if (!user || !password) {
+      if (!emailNormalizado || !password) {
         return reply.status(400).send({
           error: "Preencha todos os campos!"
         });
       }
 
       const usuario = await db.get(
-        "SELECT * FROM user WHERE user = ?",
-        [user]
+        "SELECT * FROM user WHERE lower(email) = ?",
+        [emailNormalizado]
       );
 
       if (!usuario) {
@@ -99,6 +107,7 @@ export async function authRoutes(server, db) {
         {
           id: usuario.id,
           user: usuario.user,
+          email: usuario.email,
           role: usuario.role
         },
         process.env.JWT_SECRET,

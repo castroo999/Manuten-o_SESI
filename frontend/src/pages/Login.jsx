@@ -1,29 +1,28 @@
 import api from "../services/Api.js";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ThumbsUp } from "lucide-react";
 import { toast } from "react-toastify";
 import "./Cadastro.css";
 import "./Login.css";
 
 export default function Login() {
-  const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function login(e) {
     e.preventDefault();
 
-    //pega o user e a senha para logar
-    if (!user || !password) {
+    //pega o email e a senha para logar
+    if (!email || !password) {
       toast.warning("Preencha todos os campos por favor!");
       return;
-    }else{
+    } else {
       toast.success("Login feito com sucesso carregando...");
     }
 
     try {
       const response = await api.post("/login", {
-        user,
+        email,
         password,
       });
 
@@ -39,6 +38,7 @@ export default function Login() {
         "user",
         JSON.stringify({
           user: decoded.user,
+          email: decoded.email,
           role: decoded.role,
         }),
       );
@@ -50,9 +50,8 @@ export default function Login() {
         window.location.href = "/dashboard";
       }, 1500);
 
-      setUser("");
+      setEmail("");
       setPassword("");
-      
     } catch (error) {
       console.error(error.response?.data || error.message);
       alert("Erro ao fazer login");
@@ -68,11 +67,12 @@ export default function Login() {
         </div>
 
         <label>
-          Usuario
+          Email
           <input
-            placeholder="Digite seu usuario"
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
+            type="email"
+            placeholder="Digite seu email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </label>
 
@@ -91,8 +91,10 @@ export default function Login() {
         <p className="auth-helper">
           Nao tem conta? <Link to="/cadastro">Cadastre-se</Link>
         </p>
+        <p className="auth-helper">
+          Esqueceu sua senha? <Link to="/esqueci-senha">Clique aqui</Link>
+        </p>
       </form>
-
     </section>
   );
 }

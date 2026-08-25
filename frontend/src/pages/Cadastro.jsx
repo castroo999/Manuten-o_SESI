@@ -9,6 +9,7 @@ export default function Cadastro() {
   const [descricao, setDescricao] = useState("");
   const [local, setLocal] = useState("");
   const [prioridade, setPrioridade] = useState("");
+  const [foto, setFoto] = useState(null);
   const [loading, setLoading] = useState(false);
 
 
@@ -27,18 +28,24 @@ export default function Cadastro() {
     setLoading(true);
 
     try {
+      const formData = new FormData();
+      formData.append("titulo", titulo);
+      formData.append("descricao", descricao);
+      formData.append("local", local);
+      formData.append("prioridade", prioridade);
+
+      if (foto) {
+        formData.append("foto", foto);
+      }
+
       //pega dados da api
-      await api.post("/chamados", {
-        titulo,
-        descricao,
-        local,
-        prioridade,
-      });
+      await api.post("/chamados", formData);
 
       setTitulo("");
       setDescricao("");
       setLocal("");
       setPrioridade("");
+      setFoto(null);
       
     } catch (error) {
       console.error(error);
@@ -96,6 +103,22 @@ export default function Cadastro() {
             maxLength={500}
           />
         </label>
+
+        <label>
+          Foto do problema
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFoto(e.target.files[0] || null)}
+          />
+        </label>
+
+        {foto && (
+          <div className="foto-preview">
+            <img src={URL.createObjectURL(foto)} alt="Previa do problema" />
+            <span>{foto.name}</span>
+          </div>
+        )}
 
         <button type="submit" disabled={loading}>
           {loading ? "Enviando..." : "Abrir chamado"}

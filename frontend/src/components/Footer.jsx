@@ -47,7 +47,7 @@ export default function Footer() {
 
       {/* Direitos Reservados */}
       <div className="footer-bottom">
-        <p>&copy; 2026 Plantamática. Todos os direitos reservados.</p>
+        <p>&copy; 2026 SESI-tech. Todos os direitos reservados.</p>
       </div>
     </footer>
   );

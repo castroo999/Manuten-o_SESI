@@ -7,6 +7,7 @@ import "./Cadastro.css";
 
 export default function CadastroUser() {
   const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
@@ -14,7 +15,7 @@ export default function CadastroUser() {
     e.preventDefault();
 
     //nao deixa ficar campo sem ser preenchido
-    if (!user || !password) {
+    if (!user || !email || !password) {
       toast.warning("Preencha todos os campos!");
       return;
     }
@@ -22,10 +23,12 @@ export default function CadastroUser() {
     try {
       await api.post("/registrar", {
         user,
+        email,
         password,
       });
 
       setUser("");
+      setEmail("");
       setPassword("");
       navigate("/login");
 
@@ -50,6 +53,16 @@ export default function CadastroUser() {
             placeholder="Cadastre um usuario"
             value={user}
             onChange={(e) => setUser(e.target.value)}
+          />
+        </label>
+
+        <label>
+          Email
+          <input
+            type="email"
+            placeholder="Cadastre seu email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </label>
 

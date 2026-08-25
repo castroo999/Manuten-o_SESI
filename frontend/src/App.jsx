@@ -4,6 +4,7 @@ import AdminRoute from "./components/Admin_Route";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import EsqueceuSenha from "./pages/EsqueceuSenha";
 import CadastroUser from "./pages/CadastroUser";
 import Cadastro from "./pages/Cadastro";
 import CardInicial from "./components/CardInicial";
@@ -18,6 +19,7 @@ export default function App() {
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/esqueci-senha" element={<EsqueceuSenha />} />
         <Route path="/cadastro" element={<CadastroUser />} />
         <Route path="/quem-somos" element={<QuemSomos />} />
 

@@ -65,6 +65,29 @@
   resize: vertical;
 }
 
+.formulario input[type="file"] {
+  padding: 11px;
+}
+
+.foto-preview {
+  display: grid;
+  gap: 8px;
+}
+
+.foto-preview img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border: 1px solid #d9dde3;
+  border-radius: 6px;
+}
+
+.foto-preview span {
+  color: #4b5563;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
 .formulario input:focus,
 .formulario select:focus,
 .formulario textarea:focus {
