@@ -1,6 +1,6 @@
 # SESI-tech - Sistema de Gestão de Manutenção Escolar
 
-O Plantamatica é um sistema web desenvolvido para auxiliar na gestão de manutenção escolar do SESI 428.
+O SESI-tech é um sistema web desenvolvido para auxiliar na gestão de manutenção escolar do SESI 428.
 
 A plataforma permite que alunos, funcionários e colaboradores registrem chamados de manutenção, informando:
 
