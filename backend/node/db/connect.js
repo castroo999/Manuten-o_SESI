@@ -2,12 +2,9 @@ import { connectDB } from "../banco.js";
 import { randomUUID } from "node:crypto";
 import bcrypt from "bcrypt";
 
-// conecta banco
 export async function initDB() {
-
   const db = await connectDB();
 
-  // tabela chamados
   await db.exec(`
     CREATE TABLE IF NOT EXISTS chamados (
       id TEXT PRIMARY KEY,
@@ -21,19 +18,10 @@ export async function initDB() {
       criado_em TEXT
     )
   `);
+  await db.exec("ALTER TABLE chamados ADD COLUMN IF NOT EXISTS foto TEXT");
 
-
-
-  const colunasChamados = await db.all("PRAGMA table_info(chamados)");
-  const temFoto = colunasChamados.some((coluna) => coluna.name === "foto");
-
-  if (!temFoto) {
-    await db.exec("ALTER TABLE chamados ADD COLUMN foto TEXT");
-  }
-
-  // tabela usuarios
   await db.exec(`
-    CREATE TABLE IF NOT EXISTS user(
+    CREATE TABLE IF NOT EXISTS user (
       id TEXT PRIMARY KEY,
       user TEXT,
       email TEXT,
@@ -41,74 +29,60 @@ export async function initDB() {
       role TEXT
     )
   `);
+  await db.exec("ALTER TABLE user ADD COLUMN IF NOT EXISTS email TEXT");
 
-  const colunasUser = await db.all("PRAGMA table_info(user)");
-  const temEmail = colunasUser.some((coluna) => coluna.name === "email");
-
-  if (!temEmail) {
-    await db.exec("ALTER TABLE user ADD COLUMN email TEXT");
-  }
-
-  // Padroniza variações antigas para a role usada nas permissões.
   await db.run(
     "UPDATE user SET role = 'superadmin' WHERE lower(replace(role, ' ', '')) = 'superadmin'"
   );
 
-  // admin automatico
-  const adminExiste = await db.get(
-    "SELECT * FROM user WHERE user = ?",
-    ["castro"]
-  );
+  const bootstrapId = "initial_accounts_v1";
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS app_migrations (
+      id TEXT PRIMARY KEY,
+      applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+  const bootstrapDone = await db.get("SELECT id FROM app_migrations WHERE id = ?", [bootstrapId]);
 
+  if (!bootstrapDone) {
+    const accounts = [
+      {
+        user: "castro",
+        email: "castro@gmail.com",
+        password: process.env.BOOTSTRAP_CASTRO_PASSWORD,
+        role: "superadmin",
+      },
+      {
+        user: "rene",
+        email: "rene@gmail.com",
+        password: process.env.BOOTSTRAP_RENE_PASSWORD,
+        role: "admin",
+      },
+    ];
 
+    for (const account of accounts) {
+      if (!account.password) {
+        throw new Error(`Defina BOOTSTRAP_${account.user.toUpperCase()}_PASSWORD no .env`);
+      }
 
-  if (!adminExiste) {
+      const existing = await db.get("SELECT id FROM user WHERE lower(trim(user)) = ?", [account.user]);
+      const passwordHash = await bcrypt.hash(account.password, 10);
 
-    const id = randomUUID();
+      if (existing) {
+        await db.run(
+          "UPDATE user SET user = ?, email = ?, password = ?, role = ? WHERE id = ?",
+          [account.user, account.email, passwordHash, account.role, existing.id]
+        );
+      } else {
+        await db.run(
+          "INSERT INTO user (id, user, email, password, role) VALUES (?, ?, ?, ?, ?)",
+          [randomUUID(), account.user, account.email, passwordHash, account.role]
+        );
+      }
+    }
 
-    const senha = await bcrypt.hash(
-      "Felipinho04",
-      10
-    );
-
-    await db.run(
-      "INSERT INTO user (id, user, email, password, role) VALUES (?, ?, ?, ?, ?)",
-      [id, "castro", process.env.ADMIN_EMAIL || "castro@local.com", senha, "admin"]
-    );
-  } else if (!adminExiste.email) {
-    await db.run(
-      "UPDATE user SET email = ? WHERE id = ?",
-      [process.env.ADMIN_EMAIL || "castro@local.com", adminExiste.id]
-    );
+    await db.run("INSERT INTO app_migrations (id) VALUES (?)", [bootstrapId]);
   }
-
-  
-  // super admin automatico
-  const superAdminExiste = await db.get(
-    "SELECT * FROM user WHERE user = ?",
-    ["superAdmin"]
-  );
-
-  if (!superAdminExiste) {
-    const id = randomUUID();
-
-    const senha = await bcrypt.hash(
-      "Felipinho04",
-      10
-    );
-
-    await db.run(
-      "INSERT INTO user (id, user, email, password, role) VALUES (?, ?, ?, ?, ?)",
-      [
-        id,
-        "superAdmin",
-        "super@gmail.com",
-        senha,
-        "superadmin"
-      ]
-    );
-  }
-
 
   return db;
 }

@@ -63,7 +63,8 @@ server.setErrorHandler((error, request, reply) => {
 
 // iniciar servidor
 server.listen({
-  port: process.env.PORT || 3000
+  port: process.env.PORT || 3000,
+  host: "0.0.0.0"
 }, () => {
   console.log("Servidor rodando na porta 3000");
 });
