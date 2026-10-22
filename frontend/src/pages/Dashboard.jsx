@@ -172,7 +172,11 @@ export default function Dash() {
             </thead>
 
             <tbody>
-              {usuarios.map((usuario) => (
+              {usuarios.map((usuario) => {
+                const cargo = String(usuario.role || "").trim().toLowerCase().replace(/\s+/g, "");
+                const protegido = usuario.user === "castro" || cargo === "superadmin";
+
+                return (
                 <tr key={usuario.id}>
                   <td>{usuario.user}</td>
                   <td>{usuario.role}</td>
@@ -181,7 +185,7 @@ export default function Dash() {
                   </td>
 
                   <td>
-                    {usuario.user === "castro" ? (
+                    {protegido ? (
                       <span className="protegido">🔒 Protegido</span>
                     ) : usuarioLogado?.role === "superadmin" ? (
                       <button
@@ -196,7 +200,8 @@ export default function Dash() {
                     )}
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>

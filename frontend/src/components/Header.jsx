@@ -25,7 +25,8 @@ export default function Header() {
   const navigate = useNavigate();
 
   //verifica se é adm
-  const isAdmin = usuario?.role === "admin" || usuario?.role === "superadmin";
+  const role = String(usuario?.role || "").trim().toLowerCase().replace(/\s+/g, "");
+  const isAdmin = role === "admin" || role === "superadmin";
 
   //função de logout
   function sair() {

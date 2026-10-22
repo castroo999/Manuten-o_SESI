@@ -108,7 +108,7 @@ export async function authRoutes(server, db) {
           id: usuario.id,
           user: usuario.user,
           email: usuario.email,
-          role: usuario.role
+          role: String(usuario.role || "user").trim().toLowerCase().replace(/\s+/g, "")
         },
         process.env.JWT_SECRET,
         {

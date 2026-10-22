@@ -16,7 +16,10 @@ export async function verificarToken(request, reply) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     //salva os dados do usuário
-    request.user = decoded;
+    request.user = {
+      ...decoded,
+      role: String(decoded.role || "user").trim().toLowerCase().replace(/\s+/g, ""),
+    };
 
   } catch (error) {
     return reply.status(401).send({ error: "Token inválido" });

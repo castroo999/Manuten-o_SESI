@@ -96,6 +96,20 @@ export async function adminRoutes(server, db) {
 
       const { id } = request.params;
 
+      const usuarioAlvo = await db.get(
+        "SELECT user, role FROM user WHERE id = ?",
+        [id]
+      );
+
+      if (!usuarioAlvo) {
+        return reply.status(404).send({ error: "Usuário não encontrado" });
+      }
+
+      const cargoAlvo = String(usuarioAlvo.role || "").trim().toLowerCase().replace(/\s+/g, "");
+      if (usuarioAlvo.user === "castro" || cargoAlvo === "superadmin") {
+        return reply.status(403).send({ error: "Este usuário é protegido e não pode ser excluído" });
+      }
+
       await db.run(
         "DELETE FROM chamados WHERE user_id = ?",
         [id]

@@ -22,6 +22,8 @@ export async function initDB() {
     )
   `);
 
+
+
   const colunasChamados = await db.all("PRAGMA table_info(chamados)");
   const temFoto = colunasChamados.some((coluna) => coluna.name === "foto");
 
@@ -47,11 +49,18 @@ export async function initDB() {
     await db.exec("ALTER TABLE user ADD COLUMN email TEXT");
   }
 
+  // Padroniza variações antigas para a role usada nas permissões.
+  await db.run(
+    "UPDATE user SET role = 'superadmin' WHERE lower(replace(role, ' ', '')) = 'superadmin'"
+  );
+
   // admin automatico
   const adminExiste = await db.get(
     "SELECT * FROM user WHERE user = ?",
     ["castro"]
   );
+
+
 
   if (!adminExiste) {
 
@@ -72,6 +81,34 @@ export async function initDB() {
       [process.env.ADMIN_EMAIL || "castro@local.com", adminExiste.id]
     );
   }
+
+  
+  // super admin automatico
+  const superAdminExiste = await db.get(
+    "SELECT * FROM user WHERE user = ?",
+    ["superAdmin"]
+  );
+
+  if (!superAdminExiste) {
+    const id = randomUUID();
+
+    const senha = await bcrypt.hash(
+      "Felipinho04",
+      10
+    );
+
+    await db.run(
+      "INSERT INTO user (id, user, email, password, role) VALUES (?, ?, ?, ?, ?)",
+      [
+        id,
+        "superAdmin",
+        "super@gmail.com",
+        senha,
+        "superadmin"
+      ]
+    );
+  }
+
 
   return db;
 }

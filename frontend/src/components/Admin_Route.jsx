@@ -7,9 +7,8 @@ export default function AdminRoute({ children }) {
     return <Navigate to="/login" />;
   }
 
-  const isAdmin =
-    user.role === "admin" ||
-    user.role === "superadmin";
+  const role = String(user.role || "").trim().toLowerCase().replace(/\s+/g, "");
+  const isAdmin = role === "admin" || role === "superadmin";
 
   if (!isAdmin) {
     return <Navigate to="/dashboard" />;
