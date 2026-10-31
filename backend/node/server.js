@@ -19,6 +19,7 @@ const server = fastify();
 
 // conecta banco
 const db = await initDB();
+server.addHook("onClose", async () => db.$disconnect());
 
 // cors
 await server.register(cors, {

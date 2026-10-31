@@ -1,3 +1,47 @@
+.dashboard-feedback,
+.feedback-chamados {
+  width: min(100% - 32px, 720px);
+  margin: 48px auto;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  color: #374151;
+  text-align: center;
+}
+
+.dashboard-feedback[role="status"],
+.feedback-chamados[role="status"] {
+  min-height: 96px;
+  display: grid;
+  place-items: center;
+  animation: pulse 1.3s ease-in-out infinite alternate;
+}
+
+.dashboard-feedback button,
+.feedback-chamados button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 6px;
+  background: #f2a900;
+  color: #171717;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  from { opacity: 0.65; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-feedback[role="status"],
+  .feedback-chamados[role="status"] {
+    animation: none;
+  }
+}
+
 .comeco {
   text-align: center;
   padding: 40px 20px;

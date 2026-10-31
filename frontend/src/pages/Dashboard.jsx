@@ -12,6 +12,7 @@ import {
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import api from "../services/Api";
+import { readStoredUser } from "../services/auth.js";
 
 export default function Dash() {
   const [stats, setStats] = useState({
@@ -21,8 +22,11 @@ export default function Dash() {
     andamento: 0,
     resolvidos: 0,
   });
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
+  const [tentativa, setTentativa] = useState(0);
 
-  const usuarioLogado = JSON.parse(localStorage.getItem("user") || "null");
+  const usuarioLogado = readStoredUser();
 
   const COLORS = ["#f2a900", "#2563eb", "#22c55e"];
 
@@ -44,22 +48,52 @@ export default function Dash() {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
-    async function carregarDados() {
-      try {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    api.get("/admin/overview", { signal })
+      .catch(async (error) => {
+        if (error.response?.status !== 404) throw error;
+
         const [statsResponse, usuariosResponse] = await Promise.all([
-          api.get("/admin/stats"),
-          api.get("/admin/usuarios"),
+          api.get("/admin/stats", { signal }),
+          api.get("/admin/usuarios", { signal }),
         ]);
+        return {
+          data: { stats: statsResponse.data, usuarios: usuariosResponse.data },
+        };
+      })
+      .then(({ data }) => {
+        setStats(data.stats);
+        setUsuarios(data.usuarios);
+      })
+      .catch((error) => {
+        if (error.code !== "ERR_CANCELED") {
+          console.error(error);
+          setErro("Não foi possível carregar os dados do painel.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setCarregando(false);
+      });
+    return () => controller.abort();
+  }, [tentativa]);
 
-        setStats(statsResponse.data);
-        setUsuarios(usuariosResponse.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  if (carregando) {
+    return <div className="dashboard-feedback" role="status" aria-live="polite">Carregando dados do painel...</div>;
+  }
 
-    carregarDados();
-  }, []);
+  if (erro) {
+    return (
+      <div className="dashboard-feedback dashboard-error" role="alert">
+        <p>{erro}</p>
+        <button type="button" onClick={() => {
+          setErro("");
+          setCarregando(true);
+          setTentativa((valor) => valor + 1);
+        }}>Tentar novamente</button>
+      </div>
+    );
+  }
 
   async function deletarUsuario(id) {
     try {

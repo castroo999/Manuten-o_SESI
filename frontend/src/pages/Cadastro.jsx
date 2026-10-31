@@ -1,6 +1,6 @@
 import "./Cadastro.css";
 import api from "../services/Api.js";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 
@@ -10,7 +10,15 @@ export default function Cadastro() {
   const [local, setLocal] = useState("");
   const [prioridade, setPrioridade] = useState("");
   const [foto, setFoto] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState("");
   const [loading, setLoading] = useState(false);
+  const fotoInputRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (fotoPreview) URL.revokeObjectURL(fotoPreview);
+    };
+  }, [fotoPreview]);
 
 
   async function enviar(e) {
@@ -20,12 +28,14 @@ export default function Cadastro() {
     if (!titulo || !descricao || !local || !prioridade) {
       toast.warning("Preencha todos os campos!");
       return;
-    }else{
-      toast.success("Chamado aberto com sucesso!");
-
     }
 
+    const valoresAnteriores = { titulo, descricao, local, prioridade };
     setLoading(true);
+    setTitulo("");
+    setDescricao("");
+    setLocal("");
+    setPrioridade("");
 
     try {
       const formData = new FormData();
@@ -41,15 +51,17 @@ export default function Cadastro() {
       //pega dados da api
       await api.post("/chamados", formData);
 
-      setTitulo("");
-      setDescricao("");
-      setLocal("");
-      setPrioridade("");
       setFoto(null);
-      
+      setFotoPreview("");
+      if (fotoInputRef.current) fotoInputRef.current.value = "";
+      toast.success("Chamado aberto com sucesso!");
     } catch (error) {
       console.error(error);
-      toast.warning("Erro ao abrir chamado");
+      setTitulo(valoresAnteriores.titulo);
+      setDescricao(valoresAnteriores.descricao);
+      setLocal(valoresAnteriores.local);
+      setPrioridade(valoresAnteriores.prioridade);
+      toast.error(error.response?.data?.error || "Erro ao abrir chamado. Seus dados foram restaurados.");
     } finally {
       setLoading(false);
     }
@@ -107,15 +119,20 @@ export default function Cadastro() {
         <label>
           Foto do problema
           <input
+            ref={fotoInputRef}
             type="file"
             accept="image/*"
-            onChange={(e) => setFoto(e.target.files[0] || null)}
+            onChange={(e) => {
+              const arquivo = e.target.files[0] || null;
+              setFoto(arquivo);
+              setFotoPreview(arquivo ? URL.createObjectURL(arquivo) : "");
+            }}
           />
         </label>
 
-        {foto && (
+        {foto && fotoPreview && (
           <div className="foto-preview">
-            <img src={URL.createObjectURL(foto)} alt="Previa do problema" />
+            <img src={fotoPreview} alt="Previa do problema" />
             <span>{foto.name}</span>
           </div>
         )}

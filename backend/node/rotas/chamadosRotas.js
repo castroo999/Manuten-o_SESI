@@ -48,6 +48,7 @@ async function lerDadosChamado(request) {
 }
 
 export async function chamadosRoutes(server, db) {
+  const paraResposta = ({ userId, criadoEm, ...chamado }) => ({ ...chamado, user_id: userId, criado_em: criadoEm.toISOString() });
 
   // criar chamado
   server.post(
@@ -79,24 +80,10 @@ export async function chamadosRoutes(server, db) {
 
         const status = "aberto";
 
-        await db.run(
-          `
-          INSERT INTO chamados
-          (id, titulo, descricao, local, prioridade, user_id, status, foto, criado_em)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `,
-          [
-            id,
-            titulo,
-            descricao,
-            local || "",
-            prioridade || "media",
-            user_id,
-            status,
-            foto,
-            criado_em
-          ]
-        );
+        await db.chamado.create({ data: {
+          id, titulo, descricao, local: local || "", prioridade: prioridade || "media",
+          userId: user_id, status, foto, criadoEm: new Date(criado_em),
+        } });
 
         return reply.status(201).send({
           message: "Chamado criado com sucesso!"
@@ -130,19 +117,10 @@ export async function chamadosRoutes(server, db) {
         if (request.user.role === "admin" || 
             request.user.role === "superadmin") {
 
-          return await db.all(
-            "SELECT * FROM chamados ORDER BY criado_em DESC"
-          );
+          return (await db.chamado.findMany({ orderBy: { criadoEm: "desc" } })).map(paraResposta);
         }
 
-        return await db.all(
-          `
-          SELECT * FROM chamados
-          WHERE user_id = ?
-          ORDER BY criado_em DESC
-          `,
-          [request.user.id]
-        );
+        return (await db.chamado.findMany({ where: { userId: request.user.id }, orderBy: { criadoEm: "desc" } })).map(paraResposta);
 
       } catch (error) {
 
@@ -181,19 +159,7 @@ export async function chamadosRoutes(server, db) {
           status
         } = request.body;
 
-        await db.run(
-          `
-          UPDATE chamados
-          SET
-              titulo = ?,
-              descricao = ?,
-              local = ?,
-              prioridade = ?,
-              status = ?
-          WHERE id = ?
-          `,
-          [titulo, descricao, local, prioridade, status, id]
-        );
+        await db.chamado.update({ where: { id }, data: { titulo, descricao, local, prioridade, status } });
 
         return reply.send({
           message: "Chamado atualizado"
@@ -228,10 +194,7 @@ export async function chamadosRoutes(server, db) {
 
         const { id } = request.params;
 
-        await db.run(
-          "DELETE FROM chamados WHERE id = ?",
-          [id]
-        );
+        await db.chamado.delete({ where: { id } });
 
         return reply.send({
           message: "Chamado deletado"

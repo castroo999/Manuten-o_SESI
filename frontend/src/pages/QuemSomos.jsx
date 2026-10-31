@@ -5,18 +5,18 @@ import big from "../assets/big.png";
 
 const equipe = [
   {
+    nome: "Gabriel Rodrigues",
+    foto: bigas,
+  },
+  
+  {
     nome: "Gustavo Castro",
     cargo: "Desenvolvedor Full Stack do projeto",
     foto: eu,
   },
-  {
-    nome: "Gabriel Rodrigues",
-    cargo: "PO do projeto",
-    foto: bigas,
-  },
+
   {
     nome: "Matheus Rozante",
-    cargo: "Designer Figma",
     foto: big,
   },
 ];
@@ -29,9 +29,9 @@ export default function QuemSomos() {
         <h2>Quem somos?</h2>
 
         <p>
-          A nossa ideia do projeto SESI-tech é uma plataforma
-          onde a comunidade do SESI 428 ajuda a equipe de manutenção da escola
-          informando problemas, quando ocorreram e a gravidade de cada situacao.
+          A nossa ideia do projeto SESI-tech é uma plataforma onde a comunidade
+          do SESI 428 ajuda a equipe de manutenção da escola informando
+          problemas, quando ocorreram e a gravidade de cada situacao.
         </p>
       </div>
 

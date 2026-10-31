@@ -35,10 +35,7 @@ export async function recuperarSenha(server, db) {
       });
     }
 
-    const usuario = await db.get(
-      "SELECT * FROM user WHERE lower(email) = ?",
-      [emailNormalizado]
-    );
+    const usuario = await db.user.findUnique({ where: { email: emailNormalizado } });
 
     // Nao revela se o email existe ou nao
     if (!usuario) {
@@ -71,9 +68,9 @@ export async function recuperarSenha(server, db) {
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: usuario.email,
       subject: "Recuperacao de senha",
-      text: `Ola, ${usuario.user}. Use este link para redefinir sua senha: ${link}`,
+      text: `Ola, ${usuario.username}. Use este link para redefinir sua senha: ${link}`,
       html: `
-        <p>Ola, ${usuario.user}.</p>
+        <p>Ola, ${usuario.username}.</p>
         <p>Use o link abaixo para redefinir sua senha. Ele expira em 15 minutos.</p>
         <p><a href="${link}">Redefinir senha</a></p>
       `
@@ -108,10 +105,7 @@ export async function recuperarSenha(server, db) {
         });
       }
 
-      const usuario = await db.get(
-        "SELECT * FROM user WHERE id = ?",
-        [payload.id]
-      );
+      const usuario = await db.user.findUnique({ where: { id: payload.id } });
 
       if (!usuario) {
         return reply.status(404).send({
@@ -121,10 +115,7 @@ export async function recuperarSenha(server, db) {
 
       const hash = await bcrypt.hash(password, 10);
 
-      await db.run(
-        "UPDATE user SET password = ? WHERE id = ?",
-        [hash, payload.id]
-      );
+      await db.user.update({ where: { id: payload.id }, data: { password: hash } });
 
       return reply.send({
         message: "Senha redefinida com sucesso"

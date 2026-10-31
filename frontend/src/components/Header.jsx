@@ -3,24 +3,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/favicon.png";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
-function getUser() {
-  try {
-    //pega o usuario logado
-    const user = localStorage.getItem("user");
-
-    if (!user) return null;
-    //pega somente o nome dele
-    const parsed = JSON.parse(user);
-
-    return typeof parsed === "object" && parsed.user ? parsed : null;
-  } catch {
-    return null;
-  }
-}
+import { readStoredUser } from "../services/auth.js";
 
 export default function Header() {
-  const [usuario, setUsuario] = useState(getUser());
+  const [usuario, setUsuario] = useState(readStoredUser());
   const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
@@ -43,7 +29,7 @@ export default function Header() {
   useEffect(() => {
     function atualizarDados() {
       setToken(localStorage.getItem("token"));
-      setUsuario(getUser());
+      setUsuario(readStoredUser());
     }
 
     //atualiza os dados automaticamente

@@ -1,7 +1,8 @@
 import { Navigate } from "react-router-dom";
+import { readStoredUser } from "../services/auth.js";
 
 export default function AdminRoute({ children }) {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const user = readStoredUser();
 
   if (!user) {
     return <Navigate to="/login" />;

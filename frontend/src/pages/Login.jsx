@@ -1,60 +1,57 @@
 import api from "../services/Api.js";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { userFromToken } from "../services/auth.js";
 import "./Cadastro.css";
 import "./Login.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   async function login(e) {
     e.preventDefault();
 
     //pega o email e a senha para logar
-    if (!email || !password) {
+    if (!email.trim() || !password) {
       toast.warning("Preencha todos os campos por favor!");
       return;
-    } else {
-      toast.success("Login feito com sucesso carregando...");
     }
 
+    setLoading(true);
     try {
       const response = await api.post("/login", {
-        email,
+        email: email.trim(),
         password,
       });
 
       //pega o token do user
       const token = response.data.token;
+      const user = response.data.user || userFromToken(token);
+      if (!token || !user?.user) {
+        throw new Error("O servidor não retornou uma sessão válida.");
+      }
+
       localStorage.setItem("token", token);
 
-      //corta a array do token para pegar somente o nome
-      const decoded = JSON.parse(atob(token.split(".")[1]));
-
       //guarda o nome do user e a role dele
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          user: decoded.user,
-          email: decoded.email,
-          role: decoded.role,
-        }),
-      );
+      localStorage.setItem("user", JSON.stringify(user));
 
       //dps de logar é redirecionado para a pagina inicial do site
       window.dispatchEvent(new Event("userChanged"));
 
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 1500);
-
       setEmail("");
       setPassword("");
+      toast.success("Login feito com sucesso!");
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       console.error(error.response?.data || error.message);
-      alert("Erro ao fazer login");
+      toast.error(error.response?.data?.error || "Erro ao fazer login");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -86,7 +83,9 @@ export default function Login() {
           />
         </label>
 
-        <button type="submit">Entrar</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Entrando..." : "Entrar"}
+        </button>
 
         <p className="auth-helper">
           Nao tem conta? <Link to="/cadastro">Cadastre-se</Link>

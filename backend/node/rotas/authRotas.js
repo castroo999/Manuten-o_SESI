@@ -31,10 +31,9 @@ export async function authRoutes(server, db) {
         });
       }
 
-      const existe = await db.get(
-        "SELECT * FROM user WHERE user = ? OR lower(email) = ?",
-        [user, emailNormalizado]
-      );
+      const existe = await db.user.findFirst({
+        where: { OR: [{ username: user }, { email: emailNormalizado }] },
+      });
 
       if (existe) {
         return reply.status(400).send({
@@ -48,10 +47,7 @@ export async function authRoutes(server, db) {
 
       const role = "user";
 
-      await db.run(
-        "INSERT INTO user (id, user, email, password, role) VALUES (?, ?, ?, ?, ?)",
-        [id, user, emailNormalizado, hash, role]
-      );
+      await db.user.create({ data: { id, username: user, email: emailNormalizado, password: hash, role } });
 
       return reply.status(201).send({
         
@@ -81,10 +77,7 @@ export async function authRoutes(server, db) {
         });
       }
 
-      const usuario = await db.get(
-        "SELECT * FROM user WHERE lower(email) = ?",
-        [emailNormalizado]
-      );
+      const usuario = await db.user.findUnique({ where: { email: emailNormalizado } });
 
       if (!usuario) {
         return reply.status(404).send({
@@ -106,7 +99,7 @@ export async function authRoutes(server, db) {
       const token = jwt.sign(
         {
           id: usuario.id,
-          user: usuario.user,
+          user: usuario.username,
           email: usuario.email,
           role: String(usuario.role || "user").trim().toLowerCase().replace(/\s+/g, "")
         },
@@ -116,7 +109,15 @@ export async function authRoutes(server, db) {
         }
       );
 
-      return reply.send({ token });
+      return reply.send({
+        token,
+        user: {
+          id: usuario.id,
+          user: usuario.username,
+          email: usuario.email,
+          role: String(usuario.role || "user").trim().toLowerCase().replace(/\s+/g, ""),
+        },
+      });
 
     } catch (error) {
 

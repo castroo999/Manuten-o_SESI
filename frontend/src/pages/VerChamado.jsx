@@ -5,6 +5,7 @@ import { CgSmileNeutral } from "react-icons/cg";
 import { ImAngry } from "react-icons/im";
 import api from "../services/Api";
 import { toast } from "react-toastify";
+import { readStoredUser } from "../services/auth.js";
 
 //transforma o status em uma classe css
 function getStatusClass(status = "") {
@@ -13,7 +14,7 @@ function getStatusClass(status = "") {
 
 export default function VerChamado() {
   //pega os dados do usuario logado
-  const usuarioLogado = JSON.parse(localStorage.getItem("user") || "null");
+  const usuarioLogado = readStoredUser();
 
   //guarda o id do chamado que esta sendo editado
   const [editandoId, setEditandoId] = useState(null);
@@ -33,12 +34,14 @@ export default function VerChamado() {
 
   //lista de chamados vinda do backend
   const [chamados, setChamados] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erroCarregamento, setErroCarregamento] = useState("");
+  const [tentativaCarregamento, setTentativaCarregamento] = useState(0);
 
   //texto digitado no filtro
   const [filtro, setFiltro] = useState("");
 
   //pega o token salvo no localStorage
-  const token = localStorage.getItem("token");
 
   //filtra os chamados conforme o texto digitado
   const chamadosFiltrados = chamados.filter((item) => {
@@ -53,20 +56,41 @@ export default function VerChamado() {
 
   //carrega os chamados quando a pagina abrir
   useEffect(() => {
-    async function carregarChamados() {
-      try {
-        //busca os chamados cadastrados
-        const response = await api.get("/chamados");
-
-        //garante que sempre sera um array
+    const controller = new AbortController();
+    api.get("/chamados", { signal: controller.signal })
+      .then((response) => {
         setChamados(Array.isArray(response.data) ? response.data : []);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+      })
+      .catch((error) => {
+        if (error.code !== "ERR_CANCELED") {
+          console.error(error);
+          setErroCarregamento("Não foi possível carregar os chamados.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setCarregando(false);
+      });
+    return () => controller.abort();
+  }, [tentativaCarregamento]);
 
-    carregarChamados();
-  }, [token]);
+  if (carregando) {
+    return <section className="page-chamados"><div className="feedback-chamados" role="status" aria-live="polite">Carregando chamados...</div></section>;
+  }
+
+  if (erroCarregamento) {
+    return (
+      <section className="page-chamados">
+        <div className="feedback-chamados" role="alert">
+          <p>{erroCarregamento}</p>
+          <button type="button" onClick={() => {
+            setErroCarregamento("");
+            setCarregando(true);
+            setTentativaCarregamento((valor) => valor + 1);
+          }}>Tentar novamente</button>
+        </div>
+      </section>
+    );
+  }
 
   //deleta um chamado pelo id
   async function deletar(id) {
