@@ -1,0 +1,457 @@
+/* Mobile and tablet layout adjustments shared across all app pages. */
+
+.status-cards {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto 30px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.status-cards .card-status {
+  min-width: 0;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+}
+
+.status-cards .card-status span {
+  display: block;
+  margin-bottom: 8px;
+  color: #5b616b;
+  font-size: 14px;
+}
+
+.status-cards .card-status h2 {
+  margin: 0;
+  color: #171717;
+  font-size: clamp(26px, 3vw, 38px);
+}
+
+.dashboard-feedback,
+.feedback-chamados {
+  width: min(720px, calc(100% - 32px));
+  margin: 32px auto;
+  padding: 22px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  color: #374151;
+  text-align: center;
+}
+
+@media (max-width: 960px) {
+  .status-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .chamados {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .time-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .top-bar {
+    min-height: 72px;
+    padding: 14px 0;
+    align-items: center;
+  }
+
+  .top-bar h1 {
+    font-size: clamp(21px, 6vw, 30px);
+    overflow-wrap: anywhere;
+  }
+
+  .perfil {
+    width: 48px;
+    height: 48px;
+  }
+
+  .menu-center {
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 8px 12px 62px;
+  }
+
+  .menu-center a {
+    min-height: 40px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .logout-area {
+    left: 12px;
+    bottom: 10px;
+  }
+
+  .home-page {
+    padding: 38px 16px 24px;
+  }
+
+  .home-conteudo {
+    min-height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+
+  .home h2 {
+    font-size: clamp(38px, 9vw, 58px);
+    line-height: 1.04;
+  }
+
+  .home p {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .home-logo-card {
+    min-height: 0;
+    padding: 18px;
+  }
+
+  .map-panel {
+    width: 100%;
+    max-height: 70vh;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .map-panel img {
+    display: block;
+    width: 100%;
+    min-width: 680px;
+    height: auto;
+  }
+
+  .container-info {
+    width: calc(100% - 32px);
+  }
+
+  .grafico {
+    width: 100%;
+    min-width: 0;
+    padding: 18px 12px;
+    overflow: hidden;
+  }
+
+  .grafico > div {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .tabela {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabela table {
+    min-width: 620px;
+  }
+
+  .chamados {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quem-somos {
+    width: calc(100% - 32px);
+    padding: 36px 0 12px;
+    gap: 32px;
+  }
+
+  .descricao {
+    padding: 24px 20px;
+  }
+
+  .descricao p {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .form-page {
+    width: calc(100% - 32px);
+    padding: 36px 0 12px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .form-page:has(> .formulario + .formulario) {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .formulario {
+    width: min(100%, 520px);
+    padding: 24px 20px;
+    gap: 16px;
+    box-shadow: 0 8px 28px rgba(20, 20, 20, 0.09);
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea {
+    min-width: 0;
+    font-size: 16px;
+  }
+
+  .footer {
+    margin-top: 42px;
+    padding: 30px 18px 18px;
+  }
+
+  .footer-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px 18px;
+  }
+
+  .footer-comeco {
+    grid-column: 1 / -1;
+  }
+
+  .footer-column {
+    min-width: 0;
+  }
+
+  .footer-link {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 600px) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .menu-center {
+    padding-inline: 10px;
+  }
+
+  .menu-center a {
+    padding-inline: 8px;
+    font-size: 12px;
+  }
+
+  .status-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .card-status {
+    min-width: 0;
+    padding: 14px 12px;
+  }
+
+  .card-status h2 {
+    font-size: clamp(24px, 8vw, 34px);
+  }
+
+  .comeco {
+    padding: 30px 16px 18px;
+  }
+
+  .comeco h1 {
+    font-size: clamp(25px, 8vw, 34px);
+    line-height: 1.12;
+  }
+
+  .container-info {
+    width: calc(100% - 24px);
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .grafico {
+    border-radius: 10px;
+    padding: 16px 8px;
+  }
+
+  .grafico h3 {
+    align-self: flex-start;
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  .grafico > .pizza {
+    height: 260px !important;
+  }
+
+  .grafico > div {
+    height: 300px !important;
+  }
+
+  .tabela {
+    margin-top: 8px;
+  }
+
+  .tabela caption {
+    padding: 14px;
+    font-size: 1.15rem;
+  }
+
+  .tabela th,
+  .tabela td {
+    padding: 12px;
+  }
+
+  .chamados {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .page-chamados {
+    width: calc(100% - 24px);
+    padding: 32px 0 12px;
+    gap: 18px;
+  }
+
+  .page-chamados h1 {
+    font-size: clamp(30px, 9vw, 40px);
+  }
+
+  .ticket-card {
+    min-width: 0;
+    min-height: 0;
+    padding: 16px;
+    overflow-wrap: anywhere;
+    box-shadow: 0 8px 24px rgba(20, 20, 20, 0.08);
+  }
+
+  .overlay2,
+  .overlay4,
+  .overlay3 {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .modal,
+  .modal2,
+  .modal3 {
+    width: 100%;
+    max-height: calc(100dvh - 24px);
+    padding: 20px 16px;
+    overflow-y: auto;
+    border-radius: 12px 12px 8px 8px;
+  }
+
+  .quem-somos {
+    width: calc(100% - 24px);
+    padding: 30px 0 12px;
+    gap: 28px;
+  }
+
+  .descricao {
+    padding: 21px 17px;
+  }
+
+  .descricao h2,
+  .time-topo h1 {
+    font-size: clamp(30px, 9vw, 40px);
+  }
+
+  .time-cards {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .time-card {
+    padding: 20px;
+  }
+
+  .time-card img {
+    width: 144px;
+    height: 144px;
+  }
+
+  .form-page {
+    width: calc(100% - 24px);
+    padding-top: 28px;
+  }
+
+  .formulario {
+    padding: 20px 16px;
+  }
+
+  .form-topo h1,
+  .form-topo h2 {
+    font-size: clamp(25px, 8vw, 30px);
+  }
+
+  .formulario input[type="file"] {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .footer-container {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .footer-comeco {
+    grid-column: auto;
+  }
+
+  .footer-column {
+    gap: 9px;
+  }
+
+  .footer-bottom {
+    margin-top: 26px;
+  }
+}
+
+@media (max-width: 380px) {
+  .top-bar {
+    width: calc(100% - 24px);
+    gap: 10px;
+  }
+
+  .top-bar h1 {
+    font-size: 20px;
+  }
+
+  .perfil {
+    width: 42px;
+    height: 42px;
+  }
+
+  .menu-center a {
+    padding: 7px 6px;
+    font-size: 11px;
+  }
+
+  .home-link {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (hover: none) {
+  .ticket-card:hover,
+  .menu-center a:hover,
+  .home-link a:hover,
+  button:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
